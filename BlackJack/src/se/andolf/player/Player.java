@@ -7,7 +7,7 @@ public interface Player {
 	
 	public void reciveCard(Card card);
 	
-	public int makeChoice();
+	public int getChoice();
 	
 	public currentValueObject getCurrentValue();
 	

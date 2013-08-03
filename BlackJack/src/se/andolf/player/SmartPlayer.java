@@ -38,7 +38,7 @@ public class SmartPlayer implements Player{
 		Cards.add(card);
 	}
 
-	public int makeChoice() {
+	public int getChoice() {
 		// TODO fix intelligence better
 
 //		int dealerValue = game.getDealer().getCurrentValue();

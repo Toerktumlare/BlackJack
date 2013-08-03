@@ -16,6 +16,15 @@ public class Game {
 	private Deck deck;
 	private StatisticsHandler statisticsHandler;
 	
+	//init the game
+	private void initGame() {
+		dealer = new Dealer();
+		deck = new Deck();
+		statisticsHandler = new StatisticsHandler();
+		deck.fill();
+		deck.shuffle();
+	}
+	
 	//add players to the game
 	private void initPlayers(int players) {
 		
@@ -63,17 +72,8 @@ public class Game {
 			}		}		
 	}
 	
-	//init the game
-	public void initGame() {
-		dealer = new Dealer();
-		deck = new Deck();
-		deck.fill();
-		deck.shuffle();
-		statisticsHandler = new StatisticsHandler();
-	}
-	
 	//start the gameloop
-	public void start() {
+	private void start() {
 		int i = 0;
 		while (i < ROUNDS) {
 			
@@ -87,7 +87,7 @@ public class Game {
 			
 			System.out.println();
 			System.out.println("---- INITIAL DEAL ENDED, STARTING PLAYER ROUNDS ----");
-			playersPlay();
+			startPlayerRounds();
 			
 			System.out.println();
 			System.out.println("---- CHECKING BLACKJACKS ----");
@@ -149,14 +149,15 @@ public class Game {
 	}
 	
 	//player rounds
-	private void playersPlay() {
+	private void startPlayerRounds() {
 
 		for (SmartPlayer p : playerList) {
 			boolean playing = true;
 			if(!p.getCards().isEmpty()){
 				while (playing) {
 					
-					int choice = p.makeChoice();
+					//asking player to return a choice
+					int choice = p.getChoice();
 					
 					// if choice is 0 give card
 					if (choice == 0) {
