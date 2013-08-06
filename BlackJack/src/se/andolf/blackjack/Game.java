@@ -8,9 +8,9 @@ import se.andolf.statistics.StatisticsHandler;
 
 public class Game {
 
-	final static int PLAYERS = 3;
+	final static int PLAYERS = 1;
 	final static boolean SMART_PLAYERS = false;
-	private final int ROUNDS = 10000;
+	private final int ROUNDS = 1000;
 	
 	private List<Player> playerList = null;
 	private Dealer dealer;
@@ -125,15 +125,6 @@ public class Game {
 	System.out.println("---- BLACKJACK CHECK HAS ENDED ----");
 	}
 
-	private void resetTable() {
-		for(Player p : playerList){
-			if(p.getNoOfCards() != 0){
-				p.clearCards();
-			}
-		}
-		dealer.clearCards();
-	}
-
 	private void compareHands() {
 		// loop all players hands
 		for (Player p : playerList) {
@@ -162,7 +153,6 @@ public class Game {
 					
 					// if choice is 0 give card
 					if (choice == 0) {
-						System.out.println("player: " + p.getName() + " yells out HIT ME!");
 						p.reciveCard(deck.dealCard());
 						int currentValue = p.getCurrentValue().getCurrentValue();
 						if(p.getAces() > 0){
@@ -174,7 +164,6 @@ public class Game {
 					
 					// if choice is 1 stay
 					if (choice == 1) {
-						System.out.println("player " + p.getName() + " says I'LL STAND!");
 						playing = false;
 					}
 					
@@ -239,6 +228,15 @@ public class Game {
 	
 	public Deck getDeck() {
 		return deck;
+	}
+	
+	private void resetTable() {
+		for(Player p : playerList){
+			if(p.getNoOfCards() != 0){
+				p.clearCards();
+			}
+		}
+		dealer.clearCards();
 	}
 
 	public static void main(String[] args) {

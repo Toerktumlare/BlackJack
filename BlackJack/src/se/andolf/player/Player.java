@@ -60,6 +60,12 @@ public class Player {
 		
 		//get the choice from the brain
 		int currentChoice = brain.getChoice(currentValue);
+		if(currentChoice == 0){
+			System.out.println("Player " + name + " says 'HIT ME!'");
+		}
+		if(currentChoice == 1){
+			System.out.println("Player " + name + " says 'I'LL STAND!'");
+		}
 		
 		return currentChoice;
 	}
