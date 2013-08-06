@@ -11,26 +11,31 @@ public final class Checks {
 		return true;
 	}
 
-	static boolean blackJackCheck(List<Card> Cards) {
-		if(!Cards.isEmpty()){
-			int card1 = Cards.get(0).getValue();
-			int card2 = Cards.get(1).getValue();
+	static boolean blackJackCheck(List<List<Card>> Hands) {
+		for(List<Card> cards : Hands){
 			
-			if(card1 == 1 && card2 == 10){
-				return true;
-			}
-			if(card1 == 10 && card2 == 1){
-				return true;
-			}
-			
-			int valueOfCards = 0;
-			for(Card c : Cards){
-				valueOfCards += c.getValue();
-			}
-			if(valueOfCards == 21){
-				return true;
-			}
-			return false;			
+			//if no cards no check
+			if(!cards.isEmpty()){
+				
+				//get value of first 2 cards
+				int card1 = cards.get(0).getValue();
+				int card2 = cards.get(1).getValue();
+				
+				//if first card ace, second suited or other way around then BJ = true
+				if(card1 == 1 && card2 == 10 || card1 == 10 && card2 == 1){
+					return true;
+				}
+				
+				//checking total value of cards
+				int currentValue = 0;
+				for(Card c : cards){
+					currentValue += c.getValue();
+				}
+				if(currentValue == 21){
+					return true;
+				}
+				return false;			
+			}			
 		}
 		return false;
 	}

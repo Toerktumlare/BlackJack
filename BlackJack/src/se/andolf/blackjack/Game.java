@@ -3,15 +3,16 @@ package se.andolf.blackjack;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.andolf.player.SmartPlayer;
+import se.andolf.player.Player;
 import se.andolf.statistics.StatisticsHandler;
 
 public class Game {
 
 	final static int PLAYERS = 3;
+	final static boolean SMART_PLAYERS = false;
 	private final int ROUNDS = 10000;
 	
-	private List<SmartPlayer> playerList = null;
+	private List<Player> playerList = null;
 	private Dealer dealer;
 	private Deck deck;
 	private StatisticsHandler statisticsHandler;
@@ -29,12 +30,12 @@ public class Game {
 	private void initPlayers(int players) {
 		
 		if (playerList == null) {
-			playerList = new ArrayList<SmartPlayer>();
+			playerList = new ArrayList<Player>();
 		}
 		
 		for (int i = 1; i <= players; i++) {
 			String name = Integer.toString(i);
-			SmartPlayer player = new SmartPlayer(this, name);
+			Player player = new Player(this, name, SMART_PLAYERS);
 			statisticsHandler.createPlayerStats(name);
 			playerList.add(player);
 		}
@@ -45,7 +46,7 @@ public class Game {
 	private void initDeal() {
 		
 		//first card to each player
-		for (SmartPlayer p : playerList) {
+		for (Player p : playerList) {
 			p.reciveCard(deck.dealCard());
 			int currentValue = p.getCurrentValue().getCurrentValue();
 			if(p.getAces() > 0){
@@ -62,7 +63,7 @@ public class Game {
 		}
 		
 		//second card to each player
-		for (SmartPlayer p : playerList) {
+		for (Player p : playerList) {
 			p.reciveCard(deck.dealCard());
 			int currentValue = p.getCurrentValue().getCurrentValue();
 			if(p.getAces() > 0){
@@ -113,7 +114,7 @@ public class Game {
 
 	private void checkBlackJacks() {
 		//checking players
-		for(SmartPlayer p : playerList){
+		for(Player p : playerList){
 			if(Checks.blackJackCheck(p.getCards())){
 				System.out.println("Player " + p.getName() + " HAS BLACKJACK WIIIHUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU!!!!!!!!");
 				System.out.println("---- CLEARING PLAYER " + p.getName() + "'s CARDS ----");
@@ -125,7 +126,7 @@ public class Game {
 	}
 
 	private void resetTable() {
-		for(SmartPlayer p : playerList){
+		for(Player p : playerList){
 			if(p.getNoOfCards() != 0){
 				p.clearCards();
 			}
@@ -135,7 +136,7 @@ public class Game {
 
 	private void compareHands() {
 		// loop all players hands
-		for (SmartPlayer p : playerList) {
+		for (Player p : playerList) {
 			// check if there is a win
 			if (Checks.winCheck(p.getCurrentValue().getCurrentValue(), dealer.getCurrentValue())) {
 				System.out.println("Player " + p.getName() + " WINS!");
@@ -151,7 +152,7 @@ public class Game {
 	//player rounds
 	private void startPlayerRounds() {
 
-		for (SmartPlayer p : playerList) {
+		for (Player p : playerList) {
 			boolean playing = true;
 			if(!p.getCards().isEmpty()){
 				while (playing) {
@@ -220,13 +221,13 @@ public class Game {
 		}
 	}
 
-	public List<SmartPlayer> getPlayerList() {
+	public List<Player> getPlayerList() {
 		return playerList;
 	}
 
 	public int getSuitedCardsOnTable() {
 		int suitedCards = 0;
-		for (SmartPlayer p : playerList) {
+		for (Player p : playerList) {
 			suitedCards += p.getSuitedCards();
 		}
 		return suitedCards;
