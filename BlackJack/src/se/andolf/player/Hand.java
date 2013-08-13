@@ -17,7 +17,7 @@ public class Hand {
 		}
 		
 		cards.add(card);
-		System.out.println("Card: " + card.toString() + "added to hand.");
+		System.out.println("Card: " + card.toString() + " added to hand.");
 	}
 	
 	public int getCurrentHandTotalValue(){
@@ -36,5 +36,10 @@ public class Hand {
 	
 	public List<Card> getCards(){
 		return cards; 
+	}
+	
+	public int getNoOfCards(){
+		int noOfCards = cards.size();
+		return noOfCards;
 	}
 }

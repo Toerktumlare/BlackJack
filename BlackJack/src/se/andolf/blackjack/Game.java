@@ -11,7 +11,7 @@ public class Game {
 
 	final static int PLAYERS = 1;
 	final static boolean SMART_PLAYERS = true;
-	private final int ROUNDS = 1000;
+	private final int ROUNDS = 1;
 
 	private List<Player> playerList = new ArrayList<Player>();
 	private Dealer dealer;
@@ -52,14 +52,23 @@ public class Game {
 	private void dealAllPlayersOneCardEach() {
 
 		for (Player player : playerList) {
-			player.reciveCard(deck.dealCard(), 0);
-			int currentValue = player.getHandValueObject(whatHand).getCurrentValue();
 			
-			String name = player.getName();
-			if (player.getAces() > 0) {
-				System.out.println("Player " + name + " has: " + player.getNoOfCards() + " cards with a total value of: " + player.getHandValueObject(whatHand).getBlackJackValue());
-			} else {
-				System.out.println("Player " + name + " has: " + player.getNoOfCards() + " cards with a total value of: " + currentValue);
+			List<Hand> hands = player.getHands();
+			
+			for(int currentHand = 0; currentHand < hands.size(); currentHand++){
+				
+				player.reciveCard(deck.dealCard(), currentHand);
+				
+				String name = player.getName();
+				int currentValue = player.getHandValueObject(currentHand).getCurrentValue();
+				
+				
+				//this check should be done in getCurrentHandTotalValue()
+				if (hands.get(currentHand).getCurrentHandTotalValue() <= 21) {
+					System.out.println("Player " + name + " has: " + hands.get(currentHand).getNoOfCards() + " cards with a total value of: " + player.getHandValueObject(currentHand).getBlackJackValue());
+				} else {
+					System.out.println("Player " + name + " has: " + hands.get(currentHand).getNoOfCards() + " cards with a total value of: " + currentValue);
+				}
 			}
 		}
 	}
@@ -78,28 +87,28 @@ public class Game {
 			System.out.println("---- INITIALIZING FIRST DEAL ----");
 			initDeal();
 
-			System.out.println();
-			System.out.println("---- CHECKING BLACKJACKS ----");
-			checkBlackJacks();
-
-			System.out.println();
-			System.out.println("---- INITIAL DEAL ENDED, STARTING PLAYER ROUNDS ----");
-			startPlayerRounds();
-
-			System.out.println();
-			System.out.println("---- CHECKING BLACKJACKS ----");
-			checkBlackJacks();
-
-			System.out.println();
-			System.out.println("---- INITIAL PLAYER ROUNDS ENDED, STARTING DEALERS ROUND ----");
-			dealerPlays();
-			System.out.println();
-			System.out.println("---- COMPARING HANDS ----");
-			compareHands();
-			System.out.println();
-			System.out.println("---- GAME OVER RESETTING GAME ----");
-			resetTable();
-			statisticsHandler.addRound();
+//			System.out.println();
+//			System.out.println("---- CHECKING BLACKJACKS ----");
+//			checkBlackJacks();
+//
+//			System.out.println();
+//			System.out.println("---- INITIAL DEAL ENDED, STARTING PLAYER ROUNDS ----");
+//			startPlayerRounds();
+//
+//			System.out.println();
+//			System.out.println("---- CHECKING BLACKJACKS ----");
+//			checkBlackJacks();
+//
+//			System.out.println();
+//			System.out.println("---- INITIAL PLAYER ROUNDS ENDED, STARTING DEALERS ROUND ----");
+//			dealerPlays();
+//			System.out.println();
+//			System.out.println("---- COMPARING HANDS ----");
+//			compareHands();
+//			System.out.println();
+//			System.out.println("---- GAME OVER RESETTING GAME ----");
+//			resetTable();
+//			statisticsHandler.addRound();
 			i++;
 		}
 		System.out.println("---- PRINTING GAME STATISTICS ----");
@@ -164,7 +173,7 @@ public class Game {
 		// go to each player
 		for (Player player : playerList) {
 
-			List<List<Card>> playerHands = player.getHands();
+			List<Hand> playerHands = player.getHands();
 
 			// if player has any hands
 			if (!playerHands.isEmpty()) {
