@@ -8,61 +8,41 @@ import se.andolf.blackjack.Game;
 
 public class Player {
 	
-	private List<List<Card>> Hands = null;
-	private List<Card> Cards = null;
+	private List<Hand> hands = null;
 	private String name;
 	private Game game;
-	private int currentValue = 0;
-	private int aces = 0;
+
 	boolean hardValue = true;
 	Brain brain = null;
 
-	public Player(Game game, String name, boolean inteligence) {
+	public Player(Game game, String name, boolean intelligence) {
 		this.game = game;
 		this.name = name;
-		Hands = new ArrayList<List<Card>>();
-		Cards = new ArrayList<Card>();
-		Hands.add(Cards);
+		hands = new ArrayList<Hand>();
+		hands.add(new Hand());
 		
-		if(inteligence){
+		if(intelligence){
 			brain = new SmartBrain();
 		} else {
 			brain = new DumbBrain();
-		}
-		
-		
-	}
-	
-	private void createDumbBrain(){
-		
-	}
-	
-	private void createSmartBrain(){
-		
+		}	
 	}
 	
 	//player recives a card
-	public void reciveCard(Card card) {
-		
-		//if card is an ace register it
-		if (card.getValue() == 11) {
-			aces++;
-		}
-		
-		//set currentValue and add card to cardList
-		currentValue += card.getValue();
-		for(List<Card> c : Hands){
-			c.add(card);			
-		}
+	public void reciveCard(Card card, int currentHand) {
+
+		hands.get(currentHand).addCard(card);
 	}
 
-	public int getChoice() {
+	public int getChoice(int currentHand) {
 		
 		//get the choice from the brain
-		int currentChoice = brain.getChoice(currentValue);
+		int currentChoice = brain.getChoice(currentHand, hands.get(0));
+		
 		if(currentChoice == 0){
 			System.out.println("Player " + name + " says 'HIT ME!'");
 		}
+		
 		if(currentChoice == 1){
 			System.out.println("Player " + name + " says 'I'LL STAND!'");
 		}
@@ -91,34 +71,22 @@ public class Player {
 	}
 	
 	//return currentValueObject
-	public currentValueObject getCurrentValue() {
-		currentValueObject b = new currentValueObject(currentValue);
-		return b;
+	public currentValueObject getHandValueObject(int whatHand) {
+		
+		currentValueObject valueObject = new currentValueObject(hands.get(whatHand).getCurrentHandTotalValue());
+		
+		return valueObject;
 	}
 	
 	//remove all cards
-	public void clearCards() {
-		for(List<Card> Cards : Hands){
-			Cards.clear();			
-		}
-		currentValue = 0;
-		aces = 0;
+	public void clearHand(int whatHand) {
+		
+		hands.remove(whatHand);
 		System.out.println("Players cards removed");
 	}
-	
-	//get how many suited cards player has atm.
-	public int getSuitedCards() {
-		int suitedCards = 0;
-		for (Card c : Cards) {
-			if (c.getValue() == 10) {
-				suitedCards++;
-			}
-		}
-		return suitedCards;
-	}
 
-	public List<List<Card>> getCards() {
-		return Hands;
+	public List<Hand> getHands() {
+		return hands;
 	}
 
 	public String getName() {
@@ -127,13 +95,5 @@ public class Player {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public int getAces() {
-		return aces;
-	}
-	
-	public int getNoOfCards() {
-		return Cards.size();
 	}
 }
