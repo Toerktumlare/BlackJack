@@ -11,33 +11,32 @@ public class Player {
 	private List<Hand> hands = null;
 	private String name;
 	private Game game;
+	private int currentHand;
 
 	boolean hardValue = true;
 	Brain brain = null;
 
-	public Player(Game game, String name, boolean intelligence) {
+	public Player(Game game, String name, boolean smart) {
 		this.game = game;
 		this.name = name;
 		hands = new ArrayList<Hand>();
 		hands.add(new Hand());
 		
-		if(intelligence){
-			brain = new SmartBrain();
+		if(smart){
+			brain = new SmartBrain(game);
 		} else {
-			brain = new DumbBrain();
+			brain = new DumbBrain(game);
 		}	
 	}
 	
-	//player recives a card
-	public void reciveCard(Card card, int currentHand) {
-
+	public void reciveCard(Card card) {
 		hands.get(currentHand).addCard(card);
 	}
 
-	public int getChoice(int currentHand) {
+	public int getPlayerChoice() {
 		
 		//get the choice from the brain
-		int currentChoice = brain.getChoice(currentHand, hands.get(0));
+		int currentChoice = brain.getChoice(currentHand, hands);
 		
 		if(currentChoice == 0){
 			System.out.println("Player " + name + " says 'HIT ME!'");
@@ -50,43 +49,45 @@ public class Player {
 		return currentChoice;
 	}
 	
-	//CurrentValueObject
 	public class currentValueObject {
+		
+		private Hand hand;
+		private String softValue;
+		private int hardValue;
 
-		private String blackJackValue;
-		private int currentValue;
-
-		public currentValueObject(int currentValue) {
-			this.currentValue = currentValue;
-			this.blackJackValue = (Integer.toString(currentValue-10) + " / " + Integer.toString(currentValue));
-		}
-
-		public String getBlackJackValue() {
-			return blackJackValue;
+		public currentValueObject(Hand hand) {
+			this.hand = hand;
+			this.hardValue = hand.getCurrentHandTotalValue();
+			this.softValue = (Integer.toString(hardValue-10) + " / " + Integer.toString(hardValue));
 		}
 		
-		public int getCurrentValue() {
-			return currentValue;
+		public String getCurrentValue() {
+			
+			int aces = hand.getAces();
+			
+			if(hand.getAces() > 0 && hardValue >= 11 && hardValue <= 21){
+				return softValue;
+			}
+			return Integer.toString(hardValue);
 		}
 	}
-	
-	//return currentValueObject
-	public currentValueObject getHandValueObject(int whatHand) {
-		
-		currentValueObject valueObject = new currentValueObject(hands.get(whatHand).getCurrentHandTotalValue());
-		
+
+	public currentValueObject getHandValueObject() {
+		currentValueObject valueObject = new currentValueObject(hands.get(currentHand));		
 		return valueObject;
 	}
 	
-	//remove all cards
-	public void clearHand(int whatHand) {
-		
-		hands.remove(whatHand);
+	public void clearCurrentHand() {		
+		hands.remove(currentHand);
 		System.out.println("Players cards removed");
 	}
 
-	public List<Hand> getHands() {
+	public List<Hand> getAllHands() {
 		return hands;
+	}
+	
+	public int getCurrentHandNoOfCards(){		
+		return hands.get(currentHand).getNoOfCards();		
 	}
 
 	public String getName() {
@@ -95,5 +96,16 @@ public class Player {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Hand getCurrentHand() {
+		return hands.get(currentHand);
+	}
+
+	public void setCurrentHand(int currentHand) {
+		this.currentHand = currentHand;
+	}
+	public void removeCurrentHand(){
+		hands.remove(currentHand);
 	}
 }

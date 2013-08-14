@@ -40,7 +40,7 @@ public class Deck {
 		}
 	}
 	
-	public Card dealCard(){
+	public Card getCard(){
 		if (deck.size() == 0){
 			this.fill();
 			this.shuffle();

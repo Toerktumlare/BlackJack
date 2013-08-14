@@ -7,13 +7,13 @@ import se.andolf.blackjack.Card;
 
 public class Hand {
 	
-	int aces;
+	int aces = 0;
 	List<Card> cards = new ArrayList<Card>();
 	
 	public void addCard(Card card){
 		
-		if(card.getValue() == 11 && card.getValue() == 1){
-			addAce();
+		if(card.getValue() == 11){
+			aces++;
 		}
 		
 		cards.add(card);
@@ -32,6 +32,10 @@ public class Hand {
 
 	private void addAce() {
 		aces++;		
+	}
+	
+	public int getAces(){
+		return aces;
 	}
 	
 	public List<Card> getCards(){

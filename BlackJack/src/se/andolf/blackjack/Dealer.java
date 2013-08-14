@@ -44,11 +44,6 @@ public class Dealer {
 		return name;
 	}
 
-	public void clearCards() {
-		System.out.println("Dealers cards have been removed");
-		Cards.clear();		
-	}
-
 	public List<Card> getCards() {
 		return Cards;
 	}
