@@ -5,10 +5,6 @@ import java.util.List;
 
 public class Dealer {
 	
-	//static methods and static field
-	
-	//methods to get bets, deal hands, players and dealers turns, comparing the hands
-	
 	private List<Card> Cards = new ArrayList<Card>();
 	private String name = "Dealer";
 	
@@ -16,14 +12,12 @@ public class Dealer {
 		Cards.add(card);	
 	}
 	
-	public int makeChoice(){
+	public int getChoice(){
 		if (getCurrentValue() <= 16){
-			//new card
 			return 0;
 		}
 		
 		else {
-			//stay
 			return 1;
 		}
 	}

@@ -39,17 +39,17 @@ public final class Checks {
 		}
 
 		// player is bust, dealer is bust - PLAYER LOOSES
-		if (playerValue == 0 && dealerValue == 0) {
+		else if (playerValue == 0 && dealerValue == 0) {
 			return false;
 		}
 
 		// player has same as dealer - DRAW
-		if (playerValue == dealerValue) {
+		else if (playerValue == dealerValue) {
 			System.out.println("Its a draw!");
 		}
 
 		// if player is under 21 and dealer is equal or higher than 22
-		if (playerValue < 21 && dealerValue >= 22) {
+		else if (playerValue < 21 && dealerValue >= 22) {
 			return true;
 		}
 

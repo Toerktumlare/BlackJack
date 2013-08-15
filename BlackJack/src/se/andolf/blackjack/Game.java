@@ -11,7 +11,7 @@ public class Game {
 
 	final static int PLAYERS = 1;
 	final static boolean SMART_PLAYERS = false;
-	private final int ROUNDS = 1;
+	private final int ROUNDS = 100;
 
 	private List<Player> playerList = new ArrayList<Player>();
 	private Dealer dealer;
@@ -37,7 +37,7 @@ public class Game {
 
 	}
 
-	private void initDeal() {
+	private void FirstDeal() {
 		dealAllPlayersOneCardEach();
 		dealDealerOneCard();
 		dealAllPlayersOneCardEach();
@@ -65,10 +65,13 @@ public class Game {
 	private void start() {
 		int played = 0;
 		while (played < ROUNDS) {
-
+			
+			System.out.println();
+			System.out.println("---- INITIALIZING ROUND ----");
+			initRound();
 			System.out.println();
 			System.out.println("---- INITIALIZING FIRST DEAL ----");
-			initDeal();
+			FirstDeal();
 
 			System.out.println();
 			System.out.println("---- CHECKING BLACKJACKS ----");
@@ -87,7 +90,7 @@ public class Game {
 
 			System.out.println();
 			System.out.println("---- INITIAL PLAYER ROUNDS ENDED, STARTING DEALERS ROUND ----");
-			// dealerPlays();
+			startDealerRound();
 			System.out.println();
 			System.out.println("---- COMPARING HANDS ----");
 			compareHands();
@@ -104,10 +107,15 @@ public class Game {
 		statisticsHandler.printPlayerStatistics();
 	}
 
+	private void initRound() {
+		for (Player player : playerList) {
+			player.initHand();
+		}		
+	}
+
 	private void checkBlackJacks() {
 
 		for (Player player : playerList) {
-
 			for (int i = 0; i < player.getAllHands().size(); i++) {
 
 				player.setCurrentHand(i);
@@ -119,7 +127,6 @@ public class Game {
 					player.clearCurrentHand();
 
 					statisticsHandler.addBlackJack(player.getName());
-
 				}
 			}
 		}
@@ -191,30 +198,24 @@ public class Game {
 		return true;
 	}
 
-	// dealer round
-	private void dealerPlays() {
+	private void startDealerRound() {
 
 		boolean playing = true;
 
 		while (playing) {
 
-			int choice = dealer.makeChoice();
+			int choice = dealer.getChoice();
 
-			// if choice is 0 give card
 			if (choice == 0) {
-
 				System.out.println(dealer.getName() + " pulls a card");
 				dealDealerOneCard();
-
 			}
 
-			// if choice is 1 stay
-			if (choice == 1) {
+			else if (choice == 1) {
 				System.out.println(dealer.getName() + " says I'LL STAND!");
 				playing = false;
 			}
 
-			// bust check!
 			if (Checks.bustCheck(dealer.getCurrentValue())) {
 				System.out.println(dealer.getName() + " is bust!");
 				playing = false;

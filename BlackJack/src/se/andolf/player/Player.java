@@ -20,8 +20,7 @@ public class Player {
 		this.game = game;
 		this.name = name;
 		hands = new ArrayList<Hand>();
-		hands.add(new Hand());
-		
+				
 		if(smart){
 			brain = new SmartBrain(game);
 		} else {
@@ -30,6 +29,11 @@ public class Player {
 	}
 	
 	public void reciveCard(Card card) {
+		
+		if(hands.isEmpty()){
+			hands.add(new Hand());
+		}
+		
 		hands.get(currentHand).addCard(card);
 	}
 
@@ -107,5 +111,9 @@ public class Player {
 	}
 	public void removeCurrentHand(){
 		hands.remove(currentHand);
+	}
+
+	public void initHand() {
+		hands.add(new Hand());		
 	}
 }
