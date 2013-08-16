@@ -11,12 +11,11 @@ public class Player {
 	private List<Hand> hands = null;
 	private String name;
 	private Game game;
-	private int currentHand;
+	private int currentHand, playerPositions;
+	private boolean hardValue = true;
+	private Brain brain;
 
-	boolean hardValue = true;
-	Brain brain = null;
-
-	public Player(Game game, String name, boolean smart) {
+	public Player(Game game, boolean smart) {
 		this.game = game;
 		this.name = name;
 		hands = new ArrayList<Hand>();
@@ -40,17 +39,17 @@ public class Player {
 	public int getPlayerChoice() {
 		
 		//get the choice from the brain
-		int currentChoice = brain.getChoice(currentHand, hands);
+		int brainsChoice = brain.getChoice(currentHand, hands);
 		
-		if(currentChoice == 0){
+		if(brainsChoice == 0){
 			System.out.println("Player " + name + " says 'HIT ME!'");
 		}
 		
-		if(currentChoice == 1){
+		if(brainsChoice == 1){
 			System.out.println("Player " + name + " says 'I'LL STAND!'");
 		}
 		
-		return currentChoice;
+		return brainsChoice;
 	}
 	
 	public class currentValueObject {
@@ -66,8 +65,6 @@ public class Player {
 		}
 		
 		public String getCurrentValue() {
-			
-			int aces = hand.getAces();
 			
 			if(hand.getAces() > 0 && hardValue >= 11 && hardValue <= 21){
 				return softValue;
@@ -115,5 +112,13 @@ public class Player {
 
 	public void initHand() {
 		hands.add(new Hand());		
+	}
+
+	public int getPlayerPositions() {
+		return playerPositions;
+	}
+
+	public void setPlayerPositions(int playerPositions) {
+		this.playerPositions = playerPositions;
 	}
 }

@@ -51,16 +51,21 @@ public class StatisticsHandler {
 		gameStats.addRound();
 	}
 	
+	public void addHand(){
+		gameStats.addHand();
+	}
+	
 	public void printGameStatistics(){
-		System.out.println("Number of games played: " + gameStats.getRounds());
+		System.out.println("Number of rounds played: " + gameStats.getRounds());
 		System.out.println("Number of players: " + gameStats.getPlayers());
+		System.out.println("Total number of hands played: " + gameStats.getTotalHands());
 	}
 
 	public void printPlayerStatistics() {
 		for (PlayerStats p : statisticsList) {
 			System.out.println("---- PLAYER: " + p.getName() + "----");
-			System.out.println("Number of games won: " + p.getWins());
-			System.out.println("Number of games lost: " + p.getLosses());
+			System.out.println("Number of Hands won: " + p.getWins());
+			System.out.println("Number of Hands lost: " + p.getLosses());
 			System.out.println("Number of games busted: " + p.getBusts());
 			System.out.println("Number of BlackJacks: " + p.getBlackJacks());
 			System.out.println();

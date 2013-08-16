@@ -3,15 +3,15 @@ package se.andolf.blackjack;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.andolf.player.Hand;
 import se.andolf.player.Player;
 import se.andolf.statistics.StatisticsHandler;
 
 public class Game {
 
 	final static int PLAYERS = 1;
-	final static boolean SMART_PLAYERS = false;
-	private final int ROUNDS = 100;
+	final static boolean SMART_PLAYER = false;
+	final static int ROUNDS = 100;
+	final static int PLAYER_POSITIONS = 8;
 
 	private List<Player> playerList = new ArrayList<Player>();
 	private Dealer dealer;
@@ -29,9 +29,10 @@ public class Game {
 	private void initPlayers(int players) {
 
 		for (int i = 1; i <= players; i++) {
-			String name = Integer.toString(i);
-			Player player = new Player(this, name, SMART_PLAYERS);
-			statisticsHandler.createPlayerStats(name);
+			Player player = new Player(this, SMART_PLAYER);
+			player.setName("Thomas");
+			player.setPlayerPositions(3);
+			statisticsHandler.createPlayerStats(player.getName());
 			playerList.add(player);
 		}
 
@@ -44,14 +45,12 @@ public class Game {
 	}
 
 	private void dealAllPlayersOneCardEach() {
-
+		
 		for (Player player : playerList) {
-			for (int i = 0; i < player.getAllHands().size(); i++) {
-
-				player.setCurrentHand(i);
-				player.reciveCard(deck.getCard());
-
-				System.out.println("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());
+			for (int i = 0; i < player.getPlayerPositions(); i++) {
+					player.setCurrentHand(i);
+					player.reciveCard(deck.getCard());
+					System.out.println("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());					
 			}
 		}
 	}
@@ -67,8 +66,8 @@ public class Game {
 		while (played < ROUNDS) {
 			
 			System.out.println();
-			System.out.println("---- INITIALIZING ROUND ----");
-			initRound();
+			System.out.println("---- INITIALIZING HANDS ----");
+			initHands();
 			System.out.println();
 			System.out.println("---- INITIALIZING FIRST DEAL ----");
 			FirstDeal();
@@ -107,9 +106,12 @@ public class Game {
 		statisticsHandler.printPlayerStatistics();
 	}
 
-	private void initRound() {
+	private void initHands() {
 		for (Player player : playerList) {
-			player.initHand();
+			for(int i = 0; i < player.getPlayerPositions(); i++){
+				player.initHand();
+				statisticsHandler.addHand();
+			}
 		}		
 	}
 
