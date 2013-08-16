@@ -12,12 +12,10 @@ public class Player {
 	private String name;
 	private Game game;
 	private int currentHand, playerPositions;
-	private boolean hardValue = true;
 	private Brain brain;
 
 	public Player(Game game, boolean smart) {
 		this.game = game;
-		this.name = name;
 		hands = new ArrayList<Hand>();
 				
 		if(smart){

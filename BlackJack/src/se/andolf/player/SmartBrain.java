@@ -6,7 +6,7 @@ import se.andolf.blackjack.Game;
 
 public class SmartBrain implements Brain {
 
-	private final int DECK_SIZE = 20;
+//	private final int DECK_SIZE = 20;
 	private Game game;
 
 	public SmartBrain(Game game) {

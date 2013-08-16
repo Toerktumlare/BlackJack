@@ -10,6 +10,7 @@ public class Game {
 
 	final static int PLAYERS = 1;
 	final static boolean SMART_PLAYER = false;
+	final static boolean DUMB_PLAYER = true;
 	final static int ROUNDS = 100;
 	final static int PLAYER_POSITIONS = 8;
 
@@ -22,20 +23,24 @@ public class Game {
 		dealer = new Dealer();
 		deck = new Deck();
 		statisticsHandler = new StatisticsHandler();
+		
 		deck.fill();
 		deck.shuffle();
 	}
 
 	private void initPlayers(int players) {
 
-		for (int i = 1; i <= players; i++) {
 			Player player = new Player(this, SMART_PLAYER);
 			player.setName("Thomas");
-			player.setPlayerPositions(3);
+			player.setPlayerPositions(1);
 			statisticsHandler.createPlayerStats(player.getName());
 			playerList.add(player);
-		}
-
+			
+			Player player2 = new Player(this, DUMB_PLAYER);
+			player2.setName("Dumbo");
+			player2.setPlayerPositions(1);
+			statisticsHandler.createPlayerStats(player2.getName());
+			playerList.add(player2);
 	}
 
 	private void FirstDeal() {
@@ -100,8 +105,10 @@ public class Game {
 			statisticsHandler.addRound();
 			played++;
 		}
+		System.out.println();
 		System.out.println("---- PRINTING GAME STATISTICS ----");
 		statisticsHandler.printGameStatistics();
+		System.out.println();
 		System.out.println("---- PRINTING PLAYER STATISTICS ----");
 		statisticsHandler.printPlayerStatistics();
 	}
@@ -129,6 +136,7 @@ public class Game {
 					player.clearCurrentHand();
 
 					statisticsHandler.addBlackJack(player.getName());
+					statisticsHandler.addWin(player.getName());
 				}
 			}
 		}
@@ -194,6 +202,7 @@ public class Game {
 			System.out.println("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
 			player.removeCurrentHand();
 			statisticsHandler.addBusted(player.getName());
+			statisticsHandler.addLoss(player.getName());
 
 			return false;
 		}
@@ -201,19 +210,17 @@ public class Game {
 	}
 
 	private void startDealerRound() {
-
 		boolean playing = true;
-
 		while (playing) {
 
-			int choice = dealer.getChoice();
+			int dealersChoice = dealer.getChoice();
 
-			if (choice == 0) {
+			if (dealersChoice == 0) {
 				System.out.println(dealer.getName() + " pulls a card");
 				dealDealerOneCard();
 			}
 
-			else if (choice == 1) {
+			else if (dealersChoice == 1) {
 				System.out.println(dealer.getName() + " says I'LL STAND!");
 				playing = false;
 			}
@@ -255,13 +262,10 @@ public class Game {
 	public static void main(String[] args) {
 
 		Game game = new Game();
-
 		System.out.println("---- INITIALIZING GAME ----");
 		game.initGame();
-
 		System.out.println("---- INITIALIZING PLAYERS ----");
 		game.initPlayers(PLAYERS);
-
 		System.out.println("---- STARTING GAME ----");
 		game.start();
 	}

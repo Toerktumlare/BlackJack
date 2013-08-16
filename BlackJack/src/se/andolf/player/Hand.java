@@ -7,8 +7,8 @@ import se.andolf.blackjack.Card;
 
 public class Hand {
 	
-	int aces = 0;
-	List<Card> cards = new ArrayList<Card>();
+	private int aces = 0;
+	private List<Card> cards = new ArrayList<Card>();
 	
 	public void addCard(Card card){
 		
@@ -28,10 +28,6 @@ public class Hand {
 			currentValue += card.getValue();
 		}
 		return currentValue;
-	}
-
-	private void addAce() {
-		aces++;		
 	}
 	
 	public int getAces(){

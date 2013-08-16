@@ -2,9 +2,9 @@ package se.andolf.statistics;
 
 public class GameStats {
 	
-	int players = 0;
-	int rounds = 0;
-	int totalHands = 0;
+	private int players = 0;
+	private int rounds = 0;
+	private int totalHands = 0;
 	
 	public void addPlayer(){
 		players++;
@@ -22,12 +22,11 @@ public class GameStats {
 		return rounds;
 	}
 
-	public int getTotalHands() {
-		return totalHands;
-	}
-
 	public void addHand() {
 		totalHands++;
 	}
 	
+	public int getTotalHands() {
+		return totalHands;
+	}
 }

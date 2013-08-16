@@ -5,8 +5,8 @@ import java.util.List;
 
 public class StatisticsHandler {
 
-	List<PlayerStats> statisticsList = new ArrayList<PlayerStats>();
-	GameStats gameStats = new GameStats();
+	private List<PlayerStats> statisticsList = new ArrayList<PlayerStats>();
+	private GameStats gameStats = new GameStats();
 	
 	public void createPlayerStats(String name){
 		PlayerStats playerStats = new PlayerStats(name);
@@ -66,10 +66,10 @@ public class StatisticsHandler {
 			System.out.println("---- PLAYER: " + p.getName() + "----");
 			System.out.println("Number of Hands won: " + p.getWins());
 			System.out.println("Number of Hands lost: " + p.getLosses());
+			System.out.println();
 			System.out.println("Number of games busted: " + p.getBusts());
 			System.out.println("Number of BlackJacks: " + p.getBlackJacks());
 			System.out.println();
 		}
 	}
-
 }
