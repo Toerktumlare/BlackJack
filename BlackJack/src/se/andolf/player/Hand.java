@@ -42,4 +42,8 @@ public class Hand {
 		int noOfCards = cards.size();
 		return noOfCards;
 	}
+	public void removeCard(int index) {
+		cards.remove(index);
+		System.out.println("---- CARD REMOVED AT " + index + " ----");
+	}
 }

@@ -3,14 +3,15 @@ package se.andolf.blackjack;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.andolf.player.Hand;
 import se.andolf.player.Player;
 import se.andolf.statistics.StatisticsHandler;
 
 public class Game {
 
 	final static int PLAYERS = 1;
-	final static boolean SMART_PLAYER = false;
-	final static boolean DUMB_PLAYER = true;
+	final static boolean SMART_PLAYER = true;
+	final static boolean DUMB_PLAYER = false;
 	final static int ROUNDS = 100;
 	final static int PLAYER_POSITIONS = 8;
 
@@ -35,12 +36,6 @@ public class Game {
 			player.setPlayerPositions(1);
 			statisticsHandler.createPlayerStats(player.getName());
 			playerList.add(player);
-			
-			Player player2 = new Player(this, DUMB_PLAYER);
-			player2.setName("Dumbo");
-			player2.setPlayerPositions(1);
-			statisticsHandler.createPlayerStats(player2.getName());
-			playerList.add(player2);
 	}
 
 	private void FirstDeal() {
@@ -189,10 +184,28 @@ public class Game {
 				System.out.println("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());
 				playing = bustCheck(player);
 			}
-			if (playerChoice == 1) {
+			else if (playerChoice == 1) {
 				playing = false;
 			}
+			else if (playerChoice == 2) {
+				doubleCards(player);
+			}
 		}
+	}
+
+	private void doubleCards(Player player) {
+		Card secondCard = player.getCurrentHand().getCards().get(1);
+		
+		player.initSecondHandWithCard(secondCard);
+		
+		player.removeCardFromCurrentHand(1);
+		
+		player.reciveCard(deck.getCard());
+		player.setCurrentHand(player.getCurrentHandIndex()+1);
+		player.reciveCard(deck.getCard());
+		player.setCurrentHand(player.getCurrentHandIndex()-1);
+				
+		statisticsHandler.addDouble();
 	}
 
 	private boolean bustCheck(Player player) {
@@ -269,5 +282,4 @@ public class Game {
 		System.out.println("---- STARTING GAME ----");
 		game.start();
 	}
-
 }

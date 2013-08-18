@@ -8,6 +8,8 @@ import se.andolf.blackjack.Card.Suit;
 
 public class Deck {
 	
+	// TODO create so that the deck is 6 decks
+	
 	private List<Card> deck = new ArrayList<Card>();
 
 	public void fill() {

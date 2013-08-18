@@ -55,10 +55,15 @@ public class StatisticsHandler {
 		gameStats.addHand();
 	}
 	
+	public void addDouble() {
+		gameStats.addDouble();
+	}
+	
 	public void printGameStatistics(){
 		System.out.println("Number of rounds played: " + gameStats.getRounds());
 		System.out.println("Number of players: " + gameStats.getPlayers());
 		System.out.println("Total number of hands played: " + gameStats.getTotalHands());
+		System.out.println("Total number of hands doubled: " + gameStats.getTotalDoubles());
 	}
 
 	public void printPlayerStatistics() {

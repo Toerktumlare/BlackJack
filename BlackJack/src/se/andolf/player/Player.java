@@ -46,6 +46,9 @@ public class Player {
 		if(brainsChoice == 1){
 			System.out.println("Player " + name + " says 'I'LL STAND!'");
 		}
+		if (brainsChoice == 2) {
+			System.out.println("Player " + name + " says DOUBLE!");
+		}
 		
 		return brainsChoice;
 	}
@@ -100,6 +103,9 @@ public class Player {
 	public Hand getCurrentHand() {
 		return hands.get(currentHand);
 	}
+	public int getCurrentHandIndex(){
+		return currentHand;
+	}
 
 	public void setCurrentHand(int currentHand) {
 		this.currentHand = currentHand;
@@ -110,6 +116,16 @@ public class Player {
 
 	public void initHand() {
 		hands.add(new Hand());		
+	}
+	
+	public void initSecondHandWithCard(Card card){
+		hands.add(new Hand());
+		hands.get(currentHand+1).addCard(card);
+		System.out.println("---- NEW HAND CREATED WITH CARD " + card.toString() + " ----");
+	}
+	
+	public void removeCardFromCurrentHand(int index) {
+		hands.get(currentHand).removeCard(index);
 	}
 
 	public int getPlayerPositions() {
