@@ -1,13 +1,17 @@
-package se.andolf.player;
+package se.andolf.blackjack.api;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import se.andolf.blackjack.api.Card;
 
 public class Hand {
-	
-	private int aces = 0;
+
+    private static final Logger logger = LogManager.getLogger(Hand.class);
+
+    private int aces = 0;
 	private List<Card> cards = new ArrayList<Card>();
 	
 	public void addCard(Card card){
@@ -17,7 +21,7 @@ public class Hand {
 		}
 		
 		cards.add(card);
-		System.out.println("Card: " + card.toString() + " added to hand.");
+		logger.info("Card: " + card.toString() + " added to hand.");
 	}
 	
 	public int getCurrentHandTotalValue(){
@@ -39,11 +43,10 @@ public class Hand {
 	}
 	
 	public int getNoOfCards(){
-		int noOfCards = cards.size();
-		return noOfCards;
+		return cards.size();
 	}
 	public void removeCard(int index) {
 		cards.remove(index);
-		System.out.println("---- CARD REMOVED AT " + index + " ----");
+        logger.info("---- CARD REMOVED AT " + index + " ----");
 	}
 }

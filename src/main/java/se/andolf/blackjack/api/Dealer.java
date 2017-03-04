@@ -1,6 +1,4 @@
-package se.andolf.blackjack;
-
-import se.andolf.blackjack.api.Card;
+package se.andolf.blackjack.api;
 
 import java.util.ArrayList;
 import java.util.List;

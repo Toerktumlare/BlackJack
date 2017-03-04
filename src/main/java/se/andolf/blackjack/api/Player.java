@@ -1,27 +1,32 @@
-package se.andolf.player;
+package se.andolf.blackjack.api;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import se.andolf.blackjack.Game;
+import se.andolf.blackjack.brain.Brain;
+import se.andolf.blackjack.brain.DumbBrain;
+import se.andolf.blackjack.brain.SmartBrain;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import se.andolf.blackjack.api.Card;
-import se.andolf.blackjack.Game;
-
 public class Player {
-	
+
+	private static final Logger logger = LogManager.getLogger(Player.class);
+
 	private List<Hand> hands = null;
 	private String name;
-	private Game game;
-	private int currentHand, playerPositions;
+	private int currentHand;
+    private int playerPositions;
 	private Brain brain;
 
-	public Player(Game game, boolean smart) {
-		this.game = game;
-		hands = new ArrayList<Hand>();
+	public Player(boolean smart) {
+		hands = new ArrayList<>();
 				
 		if(smart){
-			brain = new SmartBrain(game);
+			brain = new SmartBrain();
 		} else {
-			brain = new DumbBrain(game);
+			brain = new DumbBrain();
 		}	
 	}
 	
@@ -35,34 +40,36 @@ public class Player {
 	}
 
 	public int getPlayerChoice() {
-		
-		//get the choice from the brain
+
 		int brainsChoice = brain.getChoice(currentHand, hands);
-		
+
+        String message = null;
 		if(brainsChoice == 0){
-			System.out.println("Player " + name + " says 'HIT ME!'");
+			message = "'HIT ME!'";
 		}
 		
 		if(brainsChoice == 1){
-			System.out.println("Player " + name + " says 'I'LL STAND!'");
+            message = "'I'LL STAND!'";
 		}
 		if (brainsChoice == 2) {
-			System.out.println("Player " + name + " says DOUBLE!");
+            message = "'DOUBLE!'";
 		}
+
+        logger.info("Player " + name + " says: " + message);
 		
 		return brainsChoice;
 	}
 	
-	public class currentValueObject {
+	public class CurrentValueObject {
 		
 		private Hand hand;
 		private String softValue;
 		private int hardValue;
 
-		public currentValueObject(Hand hand) {
+        CurrentValueObject(Hand hand) {
 			this.hand = hand;
 			this.hardValue = hand.getCurrentHandTotalValue();
-			this.softValue = (Integer.toString(hardValue-10) + " / " + Integer.toString(hardValue));
+			this.softValue = Integer.toString(hardValue-10) + " / " + Integer.toString(hardValue);
 		}
 		
 		public String getCurrentValue() {
@@ -74,14 +81,13 @@ public class Player {
 		}
 	}
 
-	public currentValueObject getHandValueObject() {
-		currentValueObject valueObject = new currentValueObject(hands.get(currentHand));		
-		return valueObject;
+	public CurrentValueObject getHandValueObject() {
+		return new CurrentValueObject(hands.get(currentHand));
 	}
 	
 	public void clearCurrentHand() {		
 		hands.remove(currentHand);
-		System.out.println("Players cards removed");
+		logger.info("Players cards removed");
 	}
 
 	public List<Hand> getAllHands() {
@@ -110,6 +116,7 @@ public class Player {
 	public void setCurrentHand(int currentHand) {
 		this.currentHand = currentHand;
 	}
+
 	public void removeCurrentHand(){
 		hands.remove(currentHand);
 	}
@@ -121,7 +128,7 @@ public class Player {
 	public void initSecondHandWithCard(Card card){
 		hands.add(new Hand());
 		hands.get(currentHand+1).addCard(card);
-		System.out.println("---- NEW HAND CREATED WITH CARD " + card.toString() + " ----");
+        logger.info("---- NEW HAND CREATED WITH CARD " + card.toString() + " ----");
 	}
 	
 	public void removeCardFromCurrentHand(int index) {

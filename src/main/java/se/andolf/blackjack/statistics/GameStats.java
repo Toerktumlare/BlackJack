@@ -1,4 +1,4 @@
-package se.andolf.statistics;
+package se.andolf.blackjack.statistics;
 
 public class GameStats {
 	

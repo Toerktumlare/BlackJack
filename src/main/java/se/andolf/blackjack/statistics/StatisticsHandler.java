@@ -1,18 +1,23 @@
-package se.andolf.statistics;
+package se.andolf.blackjack.statistics;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatisticsHandler {
 
-	private List<PlayerStats> statisticsList = new ArrayList<PlayerStats>();
+	private static final Logger logger = LogManager.getLogger(StatisticsHandler.class);
+
+	private List<PlayerStats> statisticsList = new ArrayList<>();
 	private GameStats gameStats = new GameStats();
 	
 	public void createPlayerStats(String name){
 		PlayerStats playerStats = new PlayerStats(name);
 		statisticsList.add(playerStats);
 		gameStats.addPlayer();
-		System.out.println("---- NEW PLAYER STATISTICS OBJECT CREATED AND ADDED TO LIST ----");
+        logger.info("---- NEW PLAYER STATISTICS OBJECT CREATED AND ADDED TO LIST ----");
 	}
 
 	public void addBlackJack(String name) {
@@ -60,21 +65,21 @@ public class StatisticsHandler {
 	}
 	
 	public void printGameStatistics(){
-		System.out.println("Number of rounds played: " + gameStats.getRounds());
-		System.out.println("Number of players: " + gameStats.getPlayers());
-		System.out.println("Total number of hands played: " + gameStats.getTotalHands());
-		System.out.println("Total number of hands doubled: " + gameStats.getTotalDoubles());
+        logger.info("Number of rounds played: " + gameStats.getRounds());
+        logger.info("Number of players: " + gameStats.getPlayers());
+        logger.info("Total number of hands played: " + gameStats.getTotalHands());
+        logger.info("Total number of hands doubled: " + gameStats.getTotalDoubles());
 	}
 
 	public void printPlayerStatistics() {
 		for (PlayerStats p : statisticsList) {
-			System.out.println("---- PLAYER: " + p.getName() + "----");
-			System.out.println("Number of Hands won: " + p.getWins());
-			System.out.println("Number of Hands lost: " + p.getLosses());
-			System.out.println();
-			System.out.println("Number of games busted: " + p.getBusts());
-			System.out.println("Number of BlackJacks: " + p.getBlackJacks());
-			System.out.println();
+            logger.info("---- PLAYER: " + p.getName() + "----");
+            logger.info("Number of Hands won: " + p.getWins());
+            logger.info("Number of Hands lost: " + p.getLosses());
+            logger.info("");
+            logger.info("Number of games busted: " + p.getBusts());
+            logger.info("Number of BlackJacks: " + p.getBlackJacks());
+            logger.info("");
 		}
 	}
 }

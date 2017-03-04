@@ -3,15 +3,20 @@ package se.andolf.blackjack;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import se.andolf.blackjack.api.Card;
+import se.andolf.blackjack.api.Dealer;
+import se.andolf.blackjack.api.Deck;
 import se.andolf.blackjack.util.Checks;
-import se.andolf.player.Player;
-import se.andolf.statistics.StatisticsHandler;
+import se.andolf.blackjack.api.Player;
+import se.andolf.blackjack.statistics.StatisticsHandler;
 
 public class Game {
 
+    private static final Logger logger = LogManager.getLogger(Game.class);
 
-	final static boolean SMART_PLAYER = true;
+    final static boolean SMART_PLAYER = true;
 	final static boolean DUMB_PLAYER = false;
 	final static int ROUNDS = 100;
 	final static int PLAYER_POSITIONS = 8;
@@ -25,14 +30,11 @@ public class Game {
 		dealer = new Dealer();
 		deck = new Deck();
 		statisticsHandler = new StatisticsHandler();
-		
-		deck.fill();
-		deck.shuffle();
 	}
 
 	public void initPlayers(int players) {
 
-			Player player = new Player(this, SMART_PLAYER);
+			Player player = new Player(SMART_PLAYER);
 			player.setName("Thomas");
 			player.setPlayerPositions(1);
 			statisticsHandler.createPlayerStats(player.getName());
@@ -51,14 +53,14 @@ public class Game {
 			for (int i = 0; i < player.getPlayerPositions(); i++) {
 					player.setCurrentHand(i);
 					player.reciveCard(deck.getCard());
-					System.out.println("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());					
+					logger.info("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());					
 			}
 		}
 	}
 
 	private void dealDealerOneCard() {
 		dealer.reciveCard(deck.getCard());
-		System.out.println("Dealer has: " + dealer.getCurrentValue());
+		logger.info("Dealer has: " + dealer.getCurrentValue());
 	}
 
 	// start the gameloop
@@ -66,46 +68,46 @@ public class Game {
 		int played = 0;
 		while (played < ROUNDS) {
 			
-			System.out.println();
-			System.out.println("---- INITIALIZING HANDS ----");
+			logger.info("");
+			logger.info("---- INITIALIZING HANDS ----");
 			initHands();
-			System.out.println();
-			System.out.println("---- INITIALIZING FIRST DEAL ----");
+			logger.info("");
+			logger.info("---- INITIALIZING FIRST DEAL ----");
 			FirstDeal();
 
-			System.out.println();
-			System.out.println("---- CHECKING BLACKJACKS ----");
+			logger.info("");
+			logger.info("---- CHECKING BLACKJACKS ----");
 			checkBlackJacks();
-			System.out.println("---- BLACKJACK CHECK HAS ENDED ----");
+			logger.info("---- BLACKJACK CHECK HAS ENDED ----");
 
-			System.out.println();
-			System.out.println("---- INITIAL DEAL ENDED, STARTING PLAYER ROUNDS ----");
+			logger.info("");
+			logger.info("---- INITIAL DEAL ENDED, STARTING PLAYER ROUNDS ----");
 			startPlayerRounds();
-			System.out.println("---- PLAYER ROUNDS ENDED ----");
+			logger.info("---- PLAYER ROUNDS ENDED ----");
 
-			System.out.println();
-			System.out.println("---- CHECKING BLACKJACKS ----");
+			logger.info("");
+			logger.info("---- CHECKING BLACKJACKS ----");
 			checkBlackJacks();
-			System.out.println("---- BLACKJACK CHECK HAS ENDED ----");
+			logger.info("---- BLACKJACK CHECK HAS ENDED ----");
 
-			System.out.println();
-			System.out.println("---- INITIAL PLAYER ROUNDS ENDED, STARTING DEALERS ROUND ----");
+			logger.info("");
+			logger.info("---- INITIAL PLAYER ROUNDS ENDED, STARTING DEALERS ROUND ----");
 			startDealerRound();
-			System.out.println();
-			System.out.println("---- COMPARING HANDS ----");
+			logger.info("");
+			logger.info("---- COMPARING HANDS ----");
 			compareHands();
-			System.out.println();
-			System.out.println("---- GAME OVER RESETTING GAME ----");
+			logger.info("");
+			logger.info("---- GAME OVER RESETTING GAME ----");
 			removeAllCardsOnTable();
-			System.out.println("---- GAME RESET ----");
+			logger.info("---- GAME RESET ----");
 			statisticsHandler.addRound();
 			played++;
 		}
-		System.out.println();
-		System.out.println("---- PRINTING GAME STATISTICS ----");
+		logger.info("");
+		logger.info("---- PRINTING GAME STATISTICS ----");
 		statisticsHandler.printGameStatistics();
-		System.out.println();
-		System.out.println("---- PRINTING PLAYER STATISTICS ----");
+		logger.info("");
+		logger.info("---- PRINTING PLAYER STATISTICS ----");
 		statisticsHandler.printPlayerStatistics();
 	}
 
@@ -127,8 +129,8 @@ public class Game {
 
 				if (Checks.isBlackJack(player.getAllHands().get(i))) {
 
-					System.out.println("Player " + player.getName() + " HAS BLACKJACK WIIIHUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU!!!!!!!!");
-					System.out.println("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
+					logger.info("Player " + player.getName() + " HAS BLACKJACK WIIIHUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU!!!!!!!!");
+					logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
 					player.clearCurrentHand();
 
 					statisticsHandler.addBlackJack(player.getName());
@@ -147,12 +149,12 @@ public class Game {
 
 				if (Checks.hasWon(player.getCurrentHand().getCurrentHandTotalValue(), dealer.getCurrentValue())) {
 
-					System.out.println("Player " + player.getName() + " WINS!");
+					logger.info("Player " + player.getName() + " WINS!");
 					statisticsHandler.addWin(player.getName());
 
 				} else {
 
-					System.out.println("Player " + player.getName() + " LOOSES!");
+					logger.info("Player " + player.getName() + " LOOSES!");
 					statisticsHandler.addLoss(player.getName());
 
 				}
@@ -182,7 +184,7 @@ public class Game {
 
 			if (playerChoice == 0) {
 				player.reciveCard(deck.getCard());
-				System.out.println("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());
+				logger.info("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());
 				playing = bustCheck(player);
 			}
 			else if (playerChoice == 1) {
@@ -212,8 +214,8 @@ public class Game {
 	private boolean bustCheck(Player player) {
 		if (Checks.isBust(player.getCurrentHand().getCurrentHandTotalValue())) {
 
-			System.out.println("Dealer says player " + player.getName() + " is bust!");
-			System.out.println("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
+			logger.info("Dealer says brain " + player.getName() + " is bust!");
+			logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
 			player.removeCurrentHand();
 			statisticsHandler.addBusted(player.getName());
 			statisticsHandler.addLoss(player.getName());
@@ -230,17 +232,17 @@ public class Game {
 			int dealersChoice = dealer.getChoice();
 
 			if (dealersChoice == 0) {
-				System.out.println(dealer.getName() + " pulls a card");
+				logger.info(dealer.getName() + " pulls a card");
 				dealDealerOneCard();
 			}
 
 			else if (dealersChoice == 1) {
-				System.out.println(dealer.getName() + " says I'LL STAND!");
+				logger.info(dealer.getName() + " says I'LL STAND!");
 				playing = false;
 			}
 
 			if (Checks.isBust(dealer.getCurrentValue())) {
-				System.out.println(dealer.getName() + " is bust!");
+				logger.info(dealer.getName() + " is bust!");
 				playing = false;
 			}
 		}

@@ -3,7 +3,7 @@ package se.andolf.blackjack.util;
 import java.util.List;
 
 import se.andolf.blackjack.api.Card;
-import se.andolf.player.Hand;
+import se.andolf.blackjack.api.Hand;
 
 public final class Checks {
 
@@ -33,27 +33,27 @@ public final class Checks {
 
 	public static boolean hasWon(int playerValue, int dealerValue) {
 
-		// player higher than dealer and deler is below 21 - PLAYER WINS
+		// brain higher than dealer and deler is below 21 - PLAYER WINS
 		if (playerValue > dealerValue && dealerValue <= 21) {
 			return true;
 		}
 
-		// player is bust, dealer is bust - PLAYER LOOSES
+		// brain is bust, dealer is bust - PLAYER LOOSES
 		else if (playerValue == 0 && dealerValue == 0) {
 			return false;
 		}
 
-		// player has same as dealer - DRAW
+		// brain has same as dealer - DRAW
 		else if (playerValue == dealerValue) {
 			System.out.println("Its a draw!");
 		}
 
-		// if player is under 21 and dealer is equal or higher than 22
+		// if brain is under 21 and dealer is equal or higher than 22
 		else if (playerValue < 21 && dealerValue >= 22) {
 			return true;
 		}
 
-		// if all fails, player looses
+		// if all fails, brain looses
 		return false;
 	}
 }

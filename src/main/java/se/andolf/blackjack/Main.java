@@ -1,18 +1,22 @@
 package se.andolf.blackjack;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author Thomas on 2017-03-04.
  */
 public class Main {
 
-    final static int PLAYERS = 1;
+    private static final int PLAYERS = 1;
+    private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
 
         Game game = new Game();
-        System.out.println("---- INITIALIZING PLAYERS ----");
+        logger.info("---- INITIALIZING PLAYERS ----");
         game.initPlayers(PLAYERS);
-        System.out.println("---- STARTING GAME ----");
+        logger.info("---- STARTING GAME ----");
         game.start();
     }
 }

@@ -1,16 +1,11 @@
-package se.andolf.player;
+package se.andolf.blackjack.brain;
 
 import java.util.List;
 
 import se.andolf.blackjack.Game;
+import se.andolf.blackjack.api.Hand;
 
 public class DumbBrain implements Brain {
-	
-	Game game;
-	
-	public DumbBrain(Game game){
-		this.game = game;
-	}
 
 	@Override
 	public int getChoice(int currentHand, List<Hand>hands) {
