@@ -1,20 +1,20 @@
-package se.andolf.blackjack;
+package se.andolf.blackjack.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import se.andolf.blackjack.api.Card;
 import se.andolf.player.Hand;
 
 public final class Checks {
 
-	static boolean bustCheck(int currentValue) {
+	public static boolean isBust(int currentValue) {
 		if (currentValue <= 21) {
 			return false;
 		}
 		return true;
 	}
 
-	static boolean blackJackCheck(Hand hand) {
+	public static boolean isBlackJack(Hand hand) {
 
 		List<Card> cards = hand.getCards();
 
@@ -31,7 +31,7 @@ public final class Checks {
 		return false;
 	}
 
-	static boolean winCheck(int playerValue, int dealerValue) {
+	public static boolean hasWon(int playerValue, int dealerValue) {
 
 		// player higher than dealer and deler is below 21 - PLAYER WINS
 		if (playerValue > dealerValue && dealerValue <= 21) {

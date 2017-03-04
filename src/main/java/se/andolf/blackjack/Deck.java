@@ -3,8 +3,9 @@ package se.andolf.blackjack;
 import java.util.List;
 import java.util.ArrayList;
 
-import se.andolf.blackjack.Card.Rank;
-import se.andolf.blackjack.Card.Suit;
+import se.andolf.blackjack.api.Card;
+import se.andolf.blackjack.api.Rank;
+import se.andolf.blackjack.api.Suit;
 
 public class Deck {
 	
@@ -13,8 +14,8 @@ public class Deck {
 	private List<Card> deck = new ArrayList<Card>();
 
 	public void fill() {
-		for (Rank rank : Card.Rank.values()) {
-			for (Suit suit : Card.Suit.values()) {
+		for (Rank rank : Rank.values()) {
+			for (Suit suit : Suit.values()) {
 				Card card = new Card(rank, suit, rank.getValue());
 				deck.add(card);
 			}

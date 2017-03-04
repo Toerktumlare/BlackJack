@@ -3,7 +3,7 @@ package se.andolf.player;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.andolf.blackjack.Card;
+import se.andolf.blackjack.api.Card;
 
 public class Hand {
 	

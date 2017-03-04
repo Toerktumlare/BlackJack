@@ -3,13 +3,14 @@ package se.andolf.blackjack;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.andolf.player.Hand;
+import se.andolf.blackjack.api.Card;
+import se.andolf.blackjack.util.Checks;
 import se.andolf.player.Player;
 import se.andolf.statistics.StatisticsHandler;
 
 public class Game {
 
-	final static int PLAYERS = 1;
+
 	final static boolean SMART_PLAYER = true;
 	final static boolean DUMB_PLAYER = false;
 	final static int ROUNDS = 100;
@@ -20,7 +21,7 @@ public class Game {
 	private Deck deck;
 	private StatisticsHandler statisticsHandler;
 
-	private void initGame() {
+	public Game() {
 		dealer = new Dealer();
 		deck = new Deck();
 		statisticsHandler = new StatisticsHandler();
@@ -29,7 +30,7 @@ public class Game {
 		deck.shuffle();
 	}
 
-	private void initPlayers(int players) {
+	public void initPlayers(int players) {
 
 			Player player = new Player(this, SMART_PLAYER);
 			player.setName("Thomas");
@@ -61,7 +62,7 @@ public class Game {
 	}
 
 	// start the gameloop
-	private void start() {
+	public void start() {
 		int played = 0;
 		while (played < ROUNDS) {
 			
@@ -124,7 +125,7 @@ public class Game {
 
 				player.setCurrentHand(i);
 
-				if (Checks.blackJackCheck(player.getAllHands().get(i))) {
+				if (Checks.isBlackJack(player.getAllHands().get(i))) {
 
 					System.out.println("Player " + player.getName() + " HAS BLACKJACK WIIIHUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU!!!!!!!!");
 					System.out.println("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
@@ -144,7 +145,7 @@ public class Game {
 
 				player.setCurrentHand(i);
 
-				if (Checks.winCheck(player.getCurrentHand().getCurrentHandTotalValue(), dealer.getCurrentValue())) {
+				if (Checks.hasWon(player.getCurrentHand().getCurrentHandTotalValue(), dealer.getCurrentValue())) {
 
 					System.out.println("Player " + player.getName() + " WINS!");
 					statisticsHandler.addWin(player.getName());
@@ -209,7 +210,7 @@ public class Game {
 	}
 
 	private boolean bustCheck(Player player) {
-		if (Checks.bustCheck(player.getCurrentHand().getCurrentHandTotalValue())) {
+		if (Checks.isBust(player.getCurrentHand().getCurrentHandTotalValue())) {
 
 			System.out.println("Dealer says player " + player.getName() + " is bust!");
 			System.out.println("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
@@ -238,7 +239,7 @@ public class Game {
 				playing = false;
 			}
 
-			if (Checks.bustCheck(dealer.getCurrentValue())) {
+			if (Checks.isBust(dealer.getCurrentValue())) {
 				System.out.println(dealer.getName() + " is bust!");
 				playing = false;
 			}
@@ -272,14 +273,5 @@ public class Game {
 		dealer.getCards().clear();
 	}
 
-	public static void main(String[] args) {
 
-		Game game = new Game();
-		System.out.println("---- INITIALIZING GAME ----");
-		game.initGame();
-		System.out.println("---- INITIALIZING PLAYERS ----");
-		game.initPlayers(PLAYERS);
-		System.out.println("---- STARTING GAME ----");
-		game.start();
-	}
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import se.andolf.blackjack.Game;
 
-public class DumbBrain implements Brain{
+public class DumbBrain implements Brain {
 	
 	Game game;
 	
