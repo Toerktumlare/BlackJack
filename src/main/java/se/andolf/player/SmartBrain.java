@@ -3,8 +3,6 @@ package se.andolf.player;
 import java.util.List;
 
 import se.andolf.blackjack.Game;
-import sun.org.mozilla.javascript.internal.ast.ForLoop;
-import sun.org.mozilla.javascript.internal.ast.TryStatement;
 
 public class SmartBrain implements Brain {
 
