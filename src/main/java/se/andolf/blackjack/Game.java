@@ -5,11 +5,8 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import se.andolf.blackjack.api.Card;
-import se.andolf.blackjack.api.Dealer;
-import se.andolf.blackjack.api.Deck;
+import se.andolf.blackjack.api.*;
 import se.andolf.blackjack.util.Checks;
-import se.andolf.blackjack.api.Player;
 import se.andolf.blackjack.statistics.StatisticsHandler;
 
 public class Game {
