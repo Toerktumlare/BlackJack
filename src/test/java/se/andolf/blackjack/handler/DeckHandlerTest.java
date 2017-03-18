@@ -22,11 +22,11 @@ public class DeckHandlerTest {
         assertEquals(expected, cardsLeft);
     }
 
-    @Test
-    public void shouldDealOneRandomCard(){
-        final DeckHandler deckHandler = new DeckHandler();
-        final Card card = deckHandler.getCard();
-
-        assertNotNull(card);
-    }
+//    @Test
+//    public void shouldDealOneRandomCard(){
+//        final DeckHandler deckHandler = new DeckHandler();
+//        final Card card = deckHandler.getCard();
+//
+//        assertNotNull(card);
+//    }
 }
