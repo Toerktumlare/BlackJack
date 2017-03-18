@@ -25,7 +25,7 @@ public final class Checks {
 			return true;
 		}
 
-		if (hand.getCurrentHandTotalValue() == 21) {
+		if (hand.getValue() == 21) {
 			return true;
 		}
 		return false;
@@ -33,27 +33,22 @@ public final class Checks {
 
 	public static boolean hasWon(int playerValue, int dealerValue) {
 
-		// brain higher than dealer and deler is below 21 - PLAYER WINS
 		if (playerValue > dealerValue && dealerValue <= 21) {
 			return true;
 		}
 
-		// brain is bust, dealer is bust - PLAYER LOOSES
 		else if (playerValue == 0 && dealerValue == 0) {
 			return false;
 		}
 
-		// brain has same as dealer - DRAW
 		else if (playerValue == dealerValue) {
 			System.out.println("Its a draw!");
 		}
 
-		// if brain is under 21 and dealer is equal or higher than 22
 		else if (playerValue < 21 && dealerValue >= 22) {
 			return true;
 		}
 
-		// if all fails, brain looses
 		return false;
 	}
 }

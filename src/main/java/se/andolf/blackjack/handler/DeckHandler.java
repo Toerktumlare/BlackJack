@@ -21,6 +21,12 @@ public class DeckHandler {
         generate();
     }
 
+    public Card getCard() {
+
+
+        return null;
+    }
+
     public int getCardsLeft() {
         return cards.size();
     }
@@ -34,4 +40,6 @@ public class DeckHandler {
 
         cards = decks.stream().flatMap(deck -> deck.getCards().stream()).collect(Collectors.toList());
     }
+
+
 }

@@ -3,27 +3,26 @@ package se.andolf.blackjack.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import static se.andolf.blackjack.api.Choice.HIT;
+import static se.andolf.blackjack.api.Choice.STAND;
+
 public class Dealer {
 	
-	private List<Card> Cards = new ArrayList<Card>();
+	private List<Card> Cards = new ArrayList<>();
 	private String name = "Dealer";
 	
 	public void reciveCard(Card card) {
 		Cards.add(card);	
 	}
 	
-	public int getChoice(){
+	public Choice getChoice(){
 		if (getCurrentValue() <= 16){
-			return 0;
+			return STAND;
 		}
 		
 		else {
-			return 1;
+			return HIT;
 		}
-	}
-	
-	public int getNoOfCards() {
-		return Cards.size();
 	}
 	
 	public int getCurrentValue() {

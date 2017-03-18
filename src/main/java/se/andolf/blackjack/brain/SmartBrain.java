@@ -1,33 +1,26 @@
 package se.andolf.blackjack.brain;
 
-import java.util.List;
-
-import se.andolf.blackjack.Game;
+import se.andolf.blackjack.api.Choice;
 import se.andolf.blackjack.api.Hand;
+
+import static se.andolf.blackjack.api.Choice.*;
 
 public class SmartBrain implements Brain {
 
-	public int getChoice(int currentHand, List<Hand> hands) {
-		// TODO Smart Brain that takes more things into concideration
+	public Choice getChoice(Hand hand) {
 
-		int currentValue = hands.get(currentHand).getCurrentHandTotalValue();
+		int currentValue = hand.getValue();
 
-		if (currentValue == 20 && hands.get(currentHand).getCards().get(0).getValue() == 10 && hands.get(currentHand).getCards().get(1).getValue() == 10){
-			return 2;
+		if (currentValue == 20 && hand.getCards().get(0).getValue() == 10 && hand.getCards().get(1).getValue() == 10){
+			return SPLIT;
 		}
 		// if value is lower then 16 brain wants a card
-		else if (currentValue <= 16) {
-			return 0;
+		else if (currentValue < 16) {
+			return HIT;
 		}
 
-		// if value is higher than 16 it wants to stand
-		else if (currentValue > 16) {
-			return 1;
-		}
-
-		// if all checks fail stand
 		else {
-			return 1;
+			return STAND;
 		}
 
 	}

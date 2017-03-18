@@ -6,19 +6,23 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.andolf.blackjack.api.*;
+import se.andolf.blackjack.brain.SmartBrain;
 import se.andolf.blackjack.util.Checks;
 import se.andolf.blackjack.statistics.StatisticsHandler;
+
+import static se.andolf.blackjack.api.Choice.HIT;
+import static se.andolf.blackjack.api.Choice.SPLIT;
+import static se.andolf.blackjack.api.Choice.STAND;
 
 public class Game {
 
     private static final Logger logger = LogManager.getLogger(Game.class);
 
-    final static boolean SMART_PLAYER = true;
-	final static boolean DUMB_PLAYER = false;
+
 	final static int ROUNDS = 100;
 	final static int PLAYER_POSITIONS = 8;
 
-	private List<Player> playerList = new ArrayList<Player>();
+	private List<Player> playerList = new ArrayList<>();
 	private Dealer dealer;
 	private Deck deck;
 	private StatisticsHandler statisticsHandler;
@@ -31,9 +35,7 @@ public class Game {
 
 	public void initPlayers(int players) {
 
-			Player player = new Player(SMART_PLAYER);
-			player.setName("Thomas");
-			player.setPlayerPositions(1);
+			final Player player = new Player("Thomas", new SmartBrain());
 			statisticsHandler.createPlayerStats(player.getName());
 			playerList.add(player);
 	}
@@ -47,10 +49,10 @@ public class Game {
 	private void dealAllPlayersOneCardEach() {
 		
 		for (Player player : playerList) {
-			for (int i = 0; i < player.getPlayerPositions(); i++) {
+			for (int i = 0; i < 1; i++) {
 					player.setCurrentHand(i);
 					player.reciveCard(deck.getCard());
-					logger.info("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());					
+//					logger.info("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());
 			}
 		}
 	}
@@ -60,7 +62,6 @@ public class Game {
 		logger.info("Dealer has: " + dealer.getCurrentValue());
 	}
 
-	// start the gameloop
 	public void start() {
 		int played = 0;
 		while (played < ROUNDS) {
@@ -110,7 +111,7 @@ public class Game {
 
 	private void initHands() {
 		for (Player player : playerList) {
-			for(int i = 0; i < player.getPlayerPositions(); i++){
+			for(int i = 0; i < 1; i++){
 				player.initHand();
 				statisticsHandler.addHand();
 			}
@@ -144,7 +145,7 @@ public class Game {
 
 				player.setCurrentHand(i);
 
-				if (Checks.hasWon(player.getCurrentHand().getCurrentHandTotalValue(), dealer.getCurrentValue())) {
+				if (Checks.hasWon(player.getCurrentHand().getValue(), dealer.getCurrentValue())) {
 
 					logger.info("Player " + player.getName() + " WINS!");
 					statisticsHandler.addWin(player.getName());
@@ -171,23 +172,22 @@ public class Game {
 		}
 	}
 
-	// hit = 0, stay = 1, double = 2
 	private void startPlayingSelectedHand(Player player) {
 
 		boolean playing = true;
 		while (playing) {
 
-			int playerChoice = player.getPlayerChoice();
+			final Choice playerChoice = player.getChoice();
 
-			if (playerChoice == 0) {
+			if (playerChoice == HIT) {
 				player.reciveCard(deck.getCard());
-				logger.info("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());
+//				logger.info("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());
 				playing = bustCheck(player);
 			}
-			else if (playerChoice == 1) {
+			else if (playerChoice == STAND) {
 				playing = false;
 			}
-			else if (playerChoice == 2) {
+			else if (playerChoice == SPLIT) {
 				doubleCards(player);
 			}
 		}
@@ -209,7 +209,7 @@ public class Game {
 	}
 
 	private boolean bustCheck(Player player) {
-		if (Checks.isBust(player.getCurrentHand().getCurrentHandTotalValue())) {
+		if (Checks.isBust(player.getCurrentHand().getValue())) {
 
 			logger.info("Dealer says brain " + player.getName() + " is bust!");
 			logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
@@ -226,14 +226,14 @@ public class Game {
 		boolean playing = true;
 		while (playing) {
 
-			int dealersChoice = dealer.getChoice();
+			final Choice dealersChoice = dealer.getChoice();
 
-			if (dealersChoice == 0) {
+			if (dealersChoice == HIT) {
 				logger.info(dealer.getName() + " pulls a card");
 				dealDealerOneCard();
 			}
 
-			else if (dealersChoice == 1) {
+			else if (dealersChoice == STAND) {
 				logger.info(dealer.getName() + " says I'LL STAND!");
 				playing = false;
 			}
@@ -271,6 +271,4 @@ public class Game {
 		}
 		dealer.getCards().clear();
 	}
-
-
 }

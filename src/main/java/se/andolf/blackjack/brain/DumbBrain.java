@@ -1,33 +1,23 @@
 package se.andolf.blackjack.brain;
 
-import java.util.List;
-
-import se.andolf.blackjack.Game;
+import se.andolf.blackjack.api.Choice;
 import se.andolf.blackjack.api.Hand;
+
+import static se.andolf.blackjack.api.Choice.HIT;
+import static se.andolf.blackjack.api.Choice.STAND;
 
 public class DumbBrain implements Brain {
 
 	@Override
-	public int getChoice(int currentHand, List<Hand>hands) {
+	public Choice getChoice(Hand hand) {
 		
-		int currentValue = hands.get(currentHand).getCurrentHandTotalValue();
-		
-		// Brain that plays like the dealer
-		
-		//if value is lower then 16 brain wants a card
-		if (currentValue <= 16) {
-			return 0;
+		int currentValue = hand.getValue();
+
+		if (currentValue < 16) {
+			return HIT;
+		} else if (currentValue >= 16) {
+			return STAND;
 		}
-		
-		//if value is higher than 16 it wants to stand
-		if (currentValue > 16) {
-			return 1;
-		}
-		
-		//if all checks fail stand
-		else {
-			return 1;
-		}
-		
+        return STAND;
 	}
 }

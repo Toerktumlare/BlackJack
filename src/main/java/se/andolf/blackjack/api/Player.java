@@ -10,24 +10,23 @@ import se.andolf.blackjack.brain.SmartBrain;
 import java.util.ArrayList;
 import java.util.List;
 
+import static se.andolf.blackjack.api.Choice.HIT;
+import static se.andolf.blackjack.api.Choice.SPLIT;
+import static se.andolf.blackjack.api.Choice.STAND;
+
 public class Player {
 
 	private static final Logger logger = LogManager.getLogger(Player.class);
 
-	private List<Hand> hands = null;
+	private List<Hand> hands;
 	private String name;
-	private int currentHand;
-    private int playerPositions;
+	private int currentHand = 0;
 	private Brain brain;
 
-	public Player(boolean smart) {
-		hands = new ArrayList<>();
-				
-		if(smart){
-			brain = new SmartBrain();
-		} else {
-			brain = new DumbBrain();
-		}	
+	public Player(String name, Brain brain) {
+        this.name = name;
+		this.hands = new ArrayList<>();
+		this.brain = brain;
 	}
 	
 	public void reciveCard(Card card) {
@@ -39,51 +38,34 @@ public class Player {
 		hands.get(currentHand).addCard(card);
 	}
 
-	public int getPlayerChoice() {
-
-		int brainsChoice = brain.getChoice(currentHand, hands);
-
-        String message = null;
-		if(brainsChoice == 0){
-			message = "'HIT ME!'";
-		}
-		
-		if(brainsChoice == 1){
-            message = "'I'LL STAND!'";
-		}
-		if (brainsChoice == 2) {
-            message = "'DOUBLE!'";
-		}
-
-        logger.info("Player " + name + " says: " + message);
-		
-		return brainsChoice;
+	public Choice getChoice() {
+		return brain.getChoice(hands.get(currentHand));
 	}
 	
-	public class CurrentValueObject {
-		
-		private Hand hand;
-		private String softValue;
-		private int hardValue;
+//	public class CurrentValueObject {
+//
+//		private Hand hand;
+//		private String softValue;
+//		private int hardValue;
+//
+//        CurrentValueObject(Hand hand) {
+//			this.hand = hand;
+//			this.hardValue = hand.getValue();
+//			this.softValue = Integer.toString(hardValue-10) + " / " + Integer.toString(hardValue);
+//		}
+//
+//		public String getCurrentValue() {
+//
+//			if(hand.getAces() > 0 && hardValue >= 11 && hardValue <= 21){
+//				return softValue;
+//			}
+//			return Integer.toString(hardValue);
+//		}
+//	}
 
-        CurrentValueObject(Hand hand) {
-			this.hand = hand;
-			this.hardValue = hand.getCurrentHandTotalValue();
-			this.softValue = Integer.toString(hardValue-10) + " / " + Integer.toString(hardValue);
-		}
-		
-		public String getCurrentValue() {
-			
-			if(hand.getAces() > 0 && hardValue >= 11 && hardValue <= 21){
-				return softValue;
-			}
-			return Integer.toString(hardValue);
-		}
-	}
-
-	public CurrentValueObject getHandValueObject() {
-		return new CurrentValueObject(hands.get(currentHand));
-	}
+//	public CurrentValueObject getHandValueObject() {
+//		return new CurrentValueObject(hands.get(currentHand));
+//	}
 	
 	public void clearCurrentHand() {		
 		hands.remove(currentHand);
@@ -93,17 +75,9 @@ public class Player {
 	public List<Hand> getAllHands() {
 		return hands;
 	}
-	
-	public int getCurrentHandNoOfCards(){		
-		return hands.get(currentHand).getNoOfCards();		
-	}
 
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public Hand getCurrentHand() {
@@ -133,13 +107,5 @@ public class Player {
 	
 	public void removeCardFromCurrentHand(int index) {
 		hands.get(currentHand).removeCard(index);
-	}
-
-	public int getPlayerPositions() {
-		return playerPositions;
-	}
-
-	public void setPlayerPositions(int playerPositions) {
-		this.playerPositions = playerPositions;
 	}
 }

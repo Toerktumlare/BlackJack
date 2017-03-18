@@ -22,7 +22,7 @@ public class Deck {
     private void fill() {
 		for (Rank rank : Rank.values()) {
 			for (Suit suit : Suit.values()) {
-				Card card = new Card(rank, suit, rank.getValue());
+				Card card = new Card(rank, suit);
 				cards.add(card);
 			}
 		}
