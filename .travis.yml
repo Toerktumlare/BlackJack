@@ -4,7 +4,8 @@ jdk:
 sudo: required
 addons:
   sonarqube:
-    token: SONAR_TOKEN
+    token:
+      secure: "pG6ctCa14DdJOqJIU4jS3VfFr31oF751c8/ezixJ/QXO7ztU95Migql1CuXydtIQ+eoybbVPv4UQFSNOoav84ihVudf4h5PA0cNsrfSAWLmE7X7jTBTGflpW5lHtofnjd3O03G1ZP8FOdUw0X8Kcnt3juRLcN4IMEBKkSPYI4AkmGspYhZF6JVJN49D3oz6kpVWf7F/9XPw0GJ4eZQwICQ1H9cMMuey/21CiNG+wf36I0yn3lMz6Fb+eB0PNE9X4WnEhQEtmF54ps4wdxAKte7iWMegzOOIj1lwhFcQLysmqhrcv/yBcYvOfpQMf1qPjl00/E7CYAWUFIuzFTl2+6N0HxNgH3biiXLELwivMzS9/lCyXDU4LAOx237kMLzdDkffxt1z5nsF5uxLgzKr973hm5HWfx9Ukjsn2cKmRcwkVfxW8AmjjZ4SWjNioCKolNJb/TP5CqElSBoYfMWoSc/HOLGwrg4QRcyW+fffIuVmpTwj20P0cT4AAw4kbbYXMLarzyScRKn8PzJ6/Er76vVbm5Ota0+Czj9dSO354VCldOssyoRwJOsrrmIm+JtOJqI/GM2El5IMupBh+irSMhDr9PvKI06+cmSMwJbuD3R8ZvE0QyzvSKoKUZ4M4i9IWpnsCQxICR/qTg8cQwbtEFCZY3awwi51JqMScreS//S4="
 script: mvn clean package
 after_success:
 - mvn clean verify org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
