@@ -8,8 +8,7 @@ addons:
       secure: "HCagaIRxSTxw15rI21v3tX+e/mZxqlhavYg+/EeOzmuHSEKUTez7P16giahOr9iJpuFRykuYCIogceXlSacUjdbeecv+CjieamBK0Z7tJa6KtvxdpjRU7iHqtslDzzGWma308RHpZFO0AL7H6DcAxGLuPekCbzV1qka67Vz4OcmtwkHMKBYuj3mNR9AuYcZ1yM0o5gXqGPRvnYFZw88Pl6tACa8HsN+85clgxoK3/Alq9x6pu4YhZ9fM9pFRkLFCX7eZZCb9DAXAHg28tbfqhO3QBlArVGeCtDVQjhGOgum04NHPLOYbq0LC9R5Y1X84HhnlIyCa12QFeJQ81D97XTHKRRGFVpSn92HnFMh5oYtFkHwjn/HWDCriuV82MqnCgA7hhRlzTCDvws7+dOb9boTA1BjObkQ4Y/roV6fClPav81n7n6eM0qBm3vcNDOolD/qEjC1w4LOpvhJqdIH0RvVUbk53mwLggAwzvYgEzgC9x954jMsILdSk6ikmaemwZg1M9D4a1GkfCks3H9QJNzsyLRJUnQ9CvcjKzOzAyhWsW6COGaI8Oco/E9iQZFzrApngzs1GlA3Ct1dm7r6xVS5iWXn6LMnVcRGqMpr2Lkg0Xodd5hqrZpg1uENYa7ZA7IIG8CQH+MAalc1cgngmC7d5UxXQdbU+jeqaNU/68xU="
 script: mvn clean package
 after_success:
-- ./mvnw clean verify coveralls:report -P integration-tests,coveralls
-- ./mvnw clean verify org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -P integration-tests
+- mvn clean verify org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 cache:
   directories:
   - $HOME/.m2/repository
