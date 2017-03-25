@@ -9,16 +9,16 @@ public enum Suit {
     HEARTS(3, "Hearts"),
     SPADES(4, "Spades");
 
-    private final int suit;
+    private final int value;
     private final String name;
 
-    Suit(int suit, String name){
-        this.suit = suit;
+    Suit(int value, String name){
+        this.value = value;
         this.name = name;
     }
 
-    public int getSuit() {
-        return suit;
+    public int getValue() {
+        return value;
     }
 
     @Override

@@ -1,23 +1,22 @@
 package se.andolf.blackjack.util;
 
-import java.util.List;
-
 import se.andolf.blackjack.api.Card;
 import se.andolf.blackjack.api.Hand;
+
+import java.util.List;
 
 public final class Checks {
 
 	public static boolean isBust(int currentValue) {
-		if (currentValue <= 21) {
-			return false;
-		}
-		return true;
-	}
+        return currentValue > 21;
+    }
 
 	public static boolean isBlackJack(Hand hand) {
 
-		List<Card> cards = hand.getCards();
+		final List<Card> cards = hand.getCards();
 
+		if(cards.isEmpty())
+			return false;
 		int card1 = cards.get(0).getValue();
 		int card2 = cards.get(1).getValue();
 
@@ -25,30 +24,12 @@ public final class Checks {
 			return true;
 		}
 
-		if (hand.getValue() == 21) {
-			return true;
-		}
-		return false;
-	}
+        return hand.getValue() == 21;
+    }
 
 	public static boolean hasWon(int playerValue, int dealerValue) {
 
-		if (playerValue > dealerValue && dealerValue <= 21) {
-			return true;
-		}
-
-		else if (playerValue == 0 && dealerValue == 0) {
-			return false;
-		}
-
-		else if (playerValue == dealerValue) {
-			System.out.println("Its a draw!");
-		}
-
-		else if (playerValue < 21 && dealerValue >= 22) {
-			return true;
-		}
-
-		return false;
-	}
+        return playerValue > dealerValue && dealerValue <= 21 ||
+                dealerValue > 21 && playerValue <= 21;
+    }
 }

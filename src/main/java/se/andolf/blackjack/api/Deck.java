@@ -35,7 +35,7 @@ public class Deck {
             logger.info("---- DECK IS EMPTY REFILLING AND SHUFFLEING----");
 		}
 			Card c = cards.get(0);
-            logger.info("Card pulled: " + c.toString());
+            logger.debug("Card pulled: " + c.toString());
 			cards.remove(0);
 			return c;
 	}

@@ -8,14 +8,13 @@ import org.apache.logging.log4j.Logger;
  */
 public class Main {
 
-    private static final int PLAYERS = 1;
     private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
 
         Game game = new Game();
         logger.info("---- INITIALIZING PLAYERS ----");
-        game.initPlayers(PLAYERS);
+        game.initPlayers();
         logger.info("---- STARTING GAME ----");
         game.start();
     }

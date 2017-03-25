@@ -44,4 +44,14 @@ public class HandTest {
         assertTrue(hand.getCards().isEmpty());
     }
 
+    @Test
+    public void shouldRemoveCardFromHand(){
+        final Hand hand = new Hand();
+        hand.addCard(new Card(Rank.ACE, Suit.HEARTS));
+        hand.addCard(new Card(Rank.EIGHT, Suit.DIAMONDS));
+        hand.removeCard(0);
+        assertEquals(hand.getCards().get(0).getRank().getValue(), Rank.EIGHT.getValue());
+        assertEquals(hand.getCards().get(0).getSuit().getValue(), Suit.DIAMONDS.getValue());
+    }
+
 }

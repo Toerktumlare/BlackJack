@@ -21,7 +21,7 @@ public class Hand {
 		}
 		
 		cards.add(card);
-		logger.info("Card: " + card.toString() + " added to hand.");
+		logger.debug("Card: " + card.toString() + " added to hand.");
 	}
 	
 	public int getValue(){

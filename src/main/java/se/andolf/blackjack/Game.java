@@ -19,8 +19,7 @@ public class Game {
     private static final Logger logger = LogManager.getLogger(Game.class);
 
 
-	final static int ROUNDS = 100;
-	final static int PLAYER_POSITIONS = 8;
+	private static final int ROUNDS = 10000;
 
 	private List<Player> playerList = new ArrayList<>();
 	private Dealer dealer;
@@ -33,14 +32,14 @@ public class Game {
 		statisticsHandler = new StatisticsHandler();
 	}
 
-	public void initPlayers(int players) {
+	public void initPlayers() {
 
 			final Player player = new Player("Thomas", new SmartBrain());
 			statisticsHandler.createPlayerStats(player.getName());
 			playerList.add(player);
 	}
 
-	private void FirstDeal() {
+	private void firstDeal() {
 		dealAllPlayersOneCardEach();
 		dealDealerOneCard();
 		dealAllPlayersOneCardEach();
@@ -51,8 +50,7 @@ public class Game {
 		for (Player player : playerList) {
 			for (int i = 0; i < 1; i++) {
 					player.setCurrentHand(i);
-					player.reciveCard(deck.getCard());
-//					logger.info("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());
+					player.addCard(deck.getCard());
 			}
 		}
 	}
@@ -71,7 +69,7 @@ public class Game {
 			initHands();
 			logger.info("");
 			logger.info("---- INITIALIZING FIRST DEAL ----");
-			FirstDeal();
+			firstDeal();
 
 			logger.info("");
 			logger.info("---- CHECKING BLACKJACKS ----");
@@ -112,7 +110,7 @@ public class Game {
 	private void initHands() {
 		for (Player player : playerList) {
 			for(int i = 0; i < 1; i++){
-				player.initHand();
+				player.addHand();
 				statisticsHandler.addHand();
 			}
 		}		
@@ -121,11 +119,11 @@ public class Game {
 	private void checkBlackJacks() {
 
 		for (Player player : playerList) {
-			for (int i = 0; i < player.getAllHands().size(); i++) {
+			for (int i = 0; i < player.getHands().size(); i++) {
 
 				player.setCurrentHand(i);
 
-				if (Checks.isBlackJack(player.getAllHands().get(i))) {
+				if (Checks.isBlackJack(player.getHands().get(i))) {
 
 					logger.info("Player " + player.getName() + " HAS BLACKJACK WIIIHUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU!!!!!!!!");
 					logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
@@ -141,7 +139,7 @@ public class Game {
 	private void compareHands() {
 
 		for (Player player : playerList) {
-			for (int i = 0; i < player.getAllHands().size(); i++) {
+			for (int i = 0; i < player.getHands().size(); i++) {
 
 				player.setCurrentHand(i);
 
@@ -163,8 +161,8 @@ public class Game {
 
 	private void startPlayerRounds() {
 		for (Player player : playerList) {
-			for (int i = 0; i < player.getAllHands().size(); i++) {
-				if (!player.getAllHands().isEmpty()) {
+			for (int i = 0; i < player.getHands().size(); i++) {
+				if (!player.getHands().isEmpty()) {
 					player.setCurrentHand(i);
 					startPlayingSelectedHand(player);
 				}
@@ -180,8 +178,7 @@ public class Game {
 			final Choice playerChoice = player.getChoice();
 
 			if (playerChoice == HIT) {
-				player.reciveCard(deck.getCard());
-//				logger.info("Player " + player.getName() + " has: " + player.getCurrentHandNoOfCards() + " cards with a total value of: " + player.getHandValueObject().getCurrentValue());
+				player.addCard(deck.getCard());
 				playing = bustCheck(player);
 			}
 			else if (playerChoice == STAND) {
@@ -196,13 +193,13 @@ public class Game {
 	private void doubleCards(Player player) {
 		Card secondCard = player.getCurrentHand().getCards().get(1);
 		
-		player.initSecondHandWithCard(secondCard);
+		player.addHand(secondCard);
 		
 		player.removeCardFromCurrentHand(1);
 		
-		player.reciveCard(deck.getCard());
+		player.addCard(deck.getCard());
 		player.setCurrentHand(player.getCurrentHandIndex()+1);
-		player.reciveCard(deck.getCard());
+		player.addCard(deck.getCard());
 		player.setCurrentHand(player.getCurrentHandIndex()-1);
 				
 		statisticsHandler.addDouble();
@@ -245,29 +242,9 @@ public class Game {
 		}
 	}
 
-	public List<Player> getPlayerList() {
-		return playerList;
-	}
-
-	// public int getSuitedCardsOnTable() {
-	// int suitedCards = 0;
-	// for (Player p : playerList) {
-	// suitedCards += p.getSuitedCards();
-	// }
-	// return suitedCards;
-	// }
-
-	public Dealer getDealer() {
-		return dealer;
-	}
-
-	public Deck getDeck() {
-		return deck;
-	}
-
 	private void removeAllCardsOnTable() {
 		for (Player player : playerList) {
-			player.getAllHands().clear();
+			player.getHands().clear();
 		}
 		dealer.getCards().clear();
 	}
