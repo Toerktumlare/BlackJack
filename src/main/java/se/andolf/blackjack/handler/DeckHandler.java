@@ -2,10 +2,12 @@ package se.andolf.blackjack.handler;
 
 import se.andolf.blackjack.api.Card;
 import se.andolf.blackjack.api.Deck;
+import se.andolf.blackjack.util.DeckUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author Thomas on 2017-03-04.
@@ -13,33 +15,18 @@ import java.util.stream.Collectors;
 public class DeckHandler {
 
     private static int DEFAULT_NUMBER_OF_DECKS = 6;
-    private List<Card> cards;
+    private Deck deck;
 
 
     public DeckHandler() {
-        cards = new ArrayList<>();
-        generate();
+        deck = new Deck(DEFAULT_NUMBER_OF_DECKS);
     }
 
     public Card getCard() {
-
-
-        return null;
+        return deck.getCard();
     }
 
-    public int getCardsLeft() {
-        return cards.size();
+    public int size() {
+        return deck.getCards().size();
     }
-
-    private void generate(){
-
-        final List<Deck> decks = new ArrayList<>();
-        for (int i = 0; i < DEFAULT_NUMBER_OF_DECKS; i++) {
-            decks.add(new Deck());
-        }
-
-        cards = decks.stream().flatMap(deck -> deck.getCards().stream()).collect(Collectors.toList());
-    }
-
-
 }

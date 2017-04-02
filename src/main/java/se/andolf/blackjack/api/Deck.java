@@ -5,22 +5,33 @@ import org.apache.logging.log4j.Logger;
 import se.andolf.blackjack.util.DeckUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class Deck {
 
     private static final Logger logger = LogManager.getLogger(Deck.class);
+    private static final int DEFAULT_NUMBER_OF_DECKS = 1;
 
-	private List<Card> cards;
+    private List<Card> cards;
 
     public Deck() {
+        this(DEFAULT_NUMBER_OF_DECKS);
+    }
+
+    public Deck(int numberOfDecks) {
         cards = new ArrayList<>();
-        fill();
+        IntStream.range(0, numberOfDecks).forEach((i) -> fill());
         DeckUtil.shuffle(cards);
     }
 
     private void fill() {
-		for (Rank rank : Rank.values()) {
+        for (Rank rank : Rank.values()) {
 			for (Suit suit : Suit.values()) {
 				Card card = new Card(rank, suit);
 				cards.add(card);

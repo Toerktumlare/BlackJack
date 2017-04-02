@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Game game = new Game();
+        final Game game = new Game();
         logger.info("---- INITIALIZING PLAYERS ----");
         game.initPlayers();
         logger.info("---- STARTING GAME ----");

@@ -2,6 +2,7 @@ package se.andolf.blackjack.statistics;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import se.andolf.blackjack.api.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,46 +11,35 @@ public class StatisticsHandler {
 
 	private static final Logger logger = LogManager.getLogger(StatisticsHandler.class);
 
-	private List<PlayerStats> statisticsList = new ArrayList<>();
-	private GameStats gameStats = new GameStats();
-	
+	private List<PlayerStats> playerStatses;
+	private GameStats gameStats;
+
+	public StatisticsHandler(){
+        playerStatses = new ArrayList<>();
+        gameStats = new GameStats();
+    }
+
 	public void createPlayerStats(String name){
-		PlayerStats playerStats = new PlayerStats(name);
-		statisticsList.add(playerStats);
+		final PlayerStats playerStats = new PlayerStats(name);
+		playerStatses.add(playerStats);
 		gameStats.addPlayer();
         logger.info("---- NEW PLAYER STATISTICS OBJECT CREATED AND ADDED TO LIST ----");
 	}
 
 	public void addBlackJack(String name) {
-		for (PlayerStats p : statisticsList) {
-			if(p.getName().equals(name)){
-				p.addBlackJack();
-			}
-		}
+		playerStatses.stream().filter(p -> p.getName().equals(name)).forEach(PlayerStats::addBlackJack);
 	}
 
 	public void addWin(String name) {
-		for (PlayerStats p : statisticsList) {
-			if(p.getName().equals(name)){
-				p.addWin();
-			}
-		}
+		playerStatses.stream().filter(p -> p.getName().equals(name)).forEach(PlayerStats::addWin);
 	}
 
 	public void addLoss(String name) {
-		for (PlayerStats p : statisticsList) {
-			if(p.getName().equals(name)){
-				p.addLoss();
-			}
-		}
+		playerStatses.stream().filter(p -> p.getName().equals(name)).forEach(PlayerStats::addLoss);
 	}
 
 	public void addBusted(String name) {
-		for (PlayerStats p : statisticsList) {
-			if(p.getName().equals(name)){
-				p.addBust();
-			}
-		}
+		playerStatses.stream().filter(p -> p.getName().equals(name)).forEach(PlayerStats::addBust);
 	}
 	
 	public void addRound(){
@@ -72,7 +62,7 @@ public class StatisticsHandler {
 	}
 
 	public void printPlayerStatistics() {
-		for (PlayerStats p : statisticsList) {
+		for (PlayerStats p : playerStatses) {
             logger.info("---- PLAYER: " + p.getName() + "----");
             logger.info("Number of Hands won: " + p.getWins());
             logger.info("Number of Hands lost: " + p.getLosses());

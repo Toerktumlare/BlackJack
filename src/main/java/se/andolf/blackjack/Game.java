@@ -33,10 +33,9 @@ public class Game {
 	}
 
 	public void initPlayers() {
-
-			final Player player = new Player("Thomas", new SmartBrain());
-			statisticsHandler.createPlayerStats(player.getName());
-			playerList.add(player);
+		final Player player = new Player("Thomas", new SmartBrain());
+		statisticsHandler.createPlayerStats(player.getName());
+		playerList.add(player);
 	}
 
 	private void firstDeal() {

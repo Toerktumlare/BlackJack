@@ -15,6 +15,7 @@ public class Player {
 	private final String name;
 	private final Brain brain;
     private final List<Hand> hands;
+    private final Statistics statistics;
 
 	private int currentHand = 0;
 
@@ -31,6 +32,7 @@ public class Player {
         this.hands = new ArrayList<>();
         this.brain = brain;
         this.isDealer = isDealer;
+        statistics = new Statistics();
     }
 	
 	public void addCard(Card card) {
@@ -90,5 +92,9 @@ public class Player {
 
     public boolean isDealer() {
         return isDealer;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
     }
 }

@@ -15,8 +15,6 @@ public class DumbBrain implements Brain {
 
 		if (currentValue < 16) {
 			return HIT;
-		} else if (currentValue >= 16) {
-			return STAND;
 		}
         return STAND;
 	}
