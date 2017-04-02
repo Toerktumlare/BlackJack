@@ -20,6 +20,7 @@ public class DeckHandler {
 
     public DeckHandler() {
         deck = new Deck(DEFAULT_NUMBER_OF_DECKS);
+        DeckUtil.shuffle(deck.getCards());
     }
 
     public Card getCard() {

@@ -24,19 +24,17 @@ public class Deck {
         this(DEFAULT_NUMBER_OF_DECKS);
     }
 
+    public Deck(List<Card> cards) {
+        this.cards = cards;
+    }
+
     public Deck(int numberOfDecks) {
         cards = new ArrayList<>();
-        IntStream.range(0, numberOfDecks).forEach((i) -> fill());
-        DeckUtil.shuffle(cards);
+        IntStream.range(0, numberOfDecks).forEach(i -> fill());
     }
 
     private void fill() {
-        for (Rank rank : Rank.values()) {
-			for (Suit suit : Suit.values()) {
-				Card card = new Card(rank, suit);
-				cards.add(card);
-			}
-		}
+        Arrays.stream(Rank.values()).forEach(rank -> Arrays.stream(Suit.values()).forEach(suit -> cards.add(new Card(rank, suit))));
 	}
 	
 	public Card getCard(){
@@ -53,5 +51,9 @@ public class Deck {
 
     public List<Card> getCards() {
         return cards;
+    }
+
+    public int size() {
+        return cards.size();
     }
 }

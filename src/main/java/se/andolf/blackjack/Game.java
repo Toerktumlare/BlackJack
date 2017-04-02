@@ -6,11 +6,12 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.andolf.blackjack.api.*;
+import se.andolf.blackjack.brain.DumbBrain;
 import se.andolf.blackjack.brain.SmartBrain;
 import se.andolf.blackjack.util.Checks;
 import se.andolf.blackjack.statistics.StatisticsHandler;
+import se.andolf.blackjack.util.DeckUtil;
 
-import static java.lang.System.out;
 import static se.andolf.blackjack.api.Choice.HIT;
 import static se.andolf.blackjack.api.Choice.SPLIT;
 import static se.andolf.blackjack.api.Choice.STAND;
@@ -23,13 +24,14 @@ public class Game {
 	private static final int ROUNDS = 10000;
 
 	private List<Player> playerList = new ArrayList<>();
-	private Dealer dealer;
+	private Player dealer;
 	private Deck deck;
 	private StatisticsHandler statisticsHandler;
 
 	public Game() {
-		dealer = new Dealer();
+		dealer = new Player("Dealer", new DumbBrain(), true);
 		deck = new Deck();
+        DeckUtil.shuffle(deck.getCards());
 		statisticsHandler = new StatisticsHandler();
 	}
 
@@ -56,8 +58,8 @@ public class Game {
 	}
 
 	private void dealDealerOneCard() {
-		dealer.reciveCard(deck.getCard());
-		logger.info("Dealer has: " + dealer.getCurrentValue());
+		dealer.addCard(deck.getCard());
+		logger.info("Dealer has: " + dealer.getCurrentHand().getValue());
 	}
 
 	public void start() {
@@ -94,7 +96,7 @@ public class Game {
 			compareHands();
 			logger.info("");
 			logger.info("---- GAME OVER RESETTING GAME ----");
-			removeAllCardsOnTable();
+			clearCards();
 			logger.info("---- GAME RESET ----");
 			statisticsHandler.addRound();
 			played++;
@@ -105,7 +107,7 @@ public class Game {
 		logger.info("");
 		logger.info("---- PRINTING PLAYER STATISTICS ----");
 		statisticsHandler.printPlayerStatistics();
-        playerList.stream().forEach(player -> out.println(player.toString()));
+        playerList.stream().forEach(player -> logger.info(player.toString()));
     }
 
 	private void initHands() {
@@ -146,7 +148,7 @@ public class Game {
 
 				player.setCurrentHand(i);
 
-				if (Checks.hasWon(player.getCurrentHand().getValue(), dealer.getCurrentValue())) {
+				if (Checks.hasWon(player.getCurrentHand().getValue(), dealer.getCurrentHand().getValue())) {
 
 					logger.info("Player " + player.getName() + " WINS!");
 
@@ -198,7 +200,7 @@ public class Game {
 	}
 
 	private void doubleCards(Player player) {
-		Card secondCard = player.getCurrentHand().getCards().get(1);
+		final Card secondCard = player.getCurrentHand().getCards().get(1);
 		
 		player.addHand(secondCard);
 		
@@ -245,17 +247,15 @@ public class Game {
 				playing = false;
 			}
 
-			if (Checks.isBust(dealer.getCurrentValue())) {
+			if (Checks.isBust(dealer.getCurrentHand().getValue())) {
 				logger.info(dealer.getName() + " is bust!");
 				playing = false;
 			}
 		}
 	}
 
-	private void removeAllCardsOnTable() {
-		for (Player player : playerList) {
-			player.getHands().clear();
-		}
-		dealer.getCards().clear();
+	private void clearCards() {
+        playerList.stream().forEach(player -> player.getHands().clear());
+		dealer.getHands().clear();
 	}
 }
