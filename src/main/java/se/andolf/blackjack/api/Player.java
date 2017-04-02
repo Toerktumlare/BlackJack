@@ -97,4 +97,9 @@ public class Player {
     public Statistics getStatistics() {
         return statistics;
     }
+
+    @Override
+    public String toString() {
+        return "Player: " + name + "\n" + statistics.toString();
+    }
 }

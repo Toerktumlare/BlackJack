@@ -41,4 +41,15 @@ public class Statistics {
     public void addLoss() {
         losses++;
     }
+
+
+    @Override
+    public String toString() {
+        return "Statistics {\n" +
+                "\tblackJacks=" + blackJacks +
+                ", busts=" + busts +
+                ", wins=" + wins +
+                ", losses=" + losses +
+                "\n}";
+    }
 }

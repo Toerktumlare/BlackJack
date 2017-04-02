@@ -10,6 +10,7 @@ import se.andolf.blackjack.brain.SmartBrain;
 import se.andolf.blackjack.util.Checks;
 import se.andolf.blackjack.statistics.StatisticsHandler;
 
+import static java.lang.System.out;
 import static se.andolf.blackjack.api.Choice.HIT;
 import static se.andolf.blackjack.api.Choice.SPLIT;
 import static se.andolf.blackjack.api.Choice.STAND;
@@ -104,7 +105,8 @@ public class Game {
 		logger.info("");
 		logger.info("---- PRINTING PLAYER STATISTICS ----");
 		statisticsHandler.printPlayerStatistics();
-	}
+        playerList.stream().forEach(player -> out.println(player.toString()));
+    }
 
 	private void initHands() {
 		for (Player player : playerList) {
@@ -128,6 +130,8 @@ public class Game {
 					logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
 					player.clearCurrentHand();
 
+                    player.getStatistics().addBlackJack();
+                    player.getStatistics().addWin();
 					statisticsHandler.addBlackJack(player.getName());
 					statisticsHandler.addWin(player.getName());
 				}
@@ -145,11 +149,15 @@ public class Game {
 				if (Checks.hasWon(player.getCurrentHand().getValue(), dealer.getCurrentValue())) {
 
 					logger.info("Player " + player.getName() + " WINS!");
+
+                    player.getStatistics().addWin();
 					statisticsHandler.addWin(player.getName());
 
 				} else {
 
 					logger.info("Player " + player.getName() + " LOOSES!");
+
+                    player.getStatistics().addLoss();
 					statisticsHandler.addLoss(player.getName());
 
 				}
@@ -200,7 +208,7 @@ public class Game {
 		player.setCurrentHand(player.getCurrentHandIndex()+1);
 		player.addCard(deck.getCard());
 		player.setCurrentHand(player.getCurrentHandIndex()-1);
-				
+
 		statisticsHandler.addDouble();
 	}
 
@@ -210,6 +218,9 @@ public class Game {
 			logger.info("Dealer says brain " + player.getName() + " is bust!");
 			logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
 			player.removeCurrentHand();
+
+			player.getStatistics().addBust();
+			player.getStatistics().addLoss();
 			statisticsHandler.addBusted(player.getName());
 			statisticsHandler.addLoss(player.getName());
 
