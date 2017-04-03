@@ -19,16 +19,21 @@ import static se.andolf.blackjack.api.Choice.STAND;
 public class Game {
 
     private static final Logger logger = LogManager.getLogger(Game.class);
+    private static final int DEFAULT_NUMBER_OF_ROUNDS = 1000;
 
-
-	private static final int ROUNDS = 10000;
+    private int rounds;
 
 	private List<Player> playerList = new ArrayList<>();
 	private Player dealer;
 	private Deck deck;
 	private StatisticsHandler statisticsHandler;
 
-	public Game() {
+    public Game(){
+        this(DEFAULT_NUMBER_OF_ROUNDS);
+    }
+
+	public Game(int rounds) {
+        this.rounds = rounds;
 		dealer = new Player("Dealer", new DumbBrain(), true);
 		deck = new Deck();
         DeckUtil.shuffle(deck.getCards());
@@ -64,7 +69,7 @@ public class Game {
 
 	public void start() {
 		int played = 0;
-		while (played < ROUNDS) {
+		while (played < rounds) {
 			
 			logger.info("");
 			logger.info("---- INITIALIZING HANDS ----");
@@ -79,9 +84,9 @@ public class Game {
 			logger.info("---- BLACKJACK CHECK HAS ENDED ----");
 
 			logger.info("");
-			logger.info("---- INITIAL DEAL ENDED, STARTING PLAYER ROUNDS ----");
+			logger.info("---- INITIAL DEAL ENDED, STARTING PLAYER sounds ----");
 			startPlayerRounds();
-			logger.info("---- PLAYER ROUNDS ENDED ----");
+			logger.info("---- PLAYER sounds ENDED ----");
 
 			logger.info("");
 			logger.info("---- CHECKING BLACKJACKS ----");
@@ -89,7 +94,7 @@ public class Game {
 			logger.info("---- BLACKJACK CHECK HAS ENDED ----");
 
 			logger.info("");
-			logger.info("---- INITIAL PLAYER ROUNDS ENDED, STARTING DEALERS ROUND ----");
+			logger.info("---- INITIAL PLAYER sounds ENDED, STARTING DEALERS ROUND ----");
 			startDealerRound();
 			logger.info("");
 			logger.info("---- COMPARING HANDS ----");

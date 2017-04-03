@@ -4,11 +4,6 @@ import se.andolf.blackjack.api.Card;
 import se.andolf.blackjack.api.Deck;
 import se.andolf.blackjack.util.DeckUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 /**
  * @author Thomas on 2017-03-04.
  */
