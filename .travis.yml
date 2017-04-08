@@ -5,9 +5,13 @@ addons:
   sonarqube:
     token:
       secure: "yX8rtdd/RdqrvbfQkWWlR6HJQiBJt0TaisP0HjJIv7ERXRI/iglcLw8qkDSFqdCkmezmfkwcd1FUORJhHCuLPrNqyQMHMEn9hwIW0uxhVPJmZ+ck9uySwwkMmY0eeq9uL7FHMaS3UpADmaM7g2Ych7f54BGEkOwNeuX14GWzVWcLaNlFkGDgB+cwRM2s/MaLfuqQBobkpP6KnC41dFNTdXAuNYT3kwdXh/6cIcyEk7CcuN6h3D+wLLPtwxAYeLlg3WUes2Wr6eq8E8ooRSxsCD3mhcvyAwfIEdPiqa2zcGgY7jfSyYPDBjW6yxXX5rBPmS8SxqivDGEdLdFnkrXr040KEuWNdsaiACmLmypuE9ZgAcxnblWq8bVctEp97/zXt+Sqc/MyPutgdDvO9FrSmwWcyi6QIuS0+pCntUACRc3SZnIrlM5DfOkQtebiVffEMcw0y0TSxHlBHhns4pxxVdBCAUN7GCZW+YMdzmjcbZfz/gGCh9W74PvPw8XKMe24zXEOeev6sY5s4jGDOBsUw5areEFl1ZZw8ZKGhKc674SfsW4cm+h8PYQ1vFebXUNqA2Vdh+tjIeriuezVqt8O0TGMbS3NT81LdTPyBdjs67TCtiTbX1kDzSek1TIrIviaIrsK0FNxyiT67PnWTB5E2zHvQPLYDNvMv6dT2dj2otY="
+script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 jdk:
 - oraclejdk8
-script:
-- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
 notifications:
   email: false
