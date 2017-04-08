@@ -3,6 +3,7 @@ sudo: false
 install: true
 addons:
   sonarqube:
+    organization: $SONAR_ORGANIZATION
     token:
       secure: "d/UNMvJeMTaufr/UV/4A2x4piGztz+YQSPA4UgsC/c1cVc12ECLpCimBvfqf2HUioEMYlsNaK+YqF1ZgU1zNZnxad16g6hlZlZztd0Mq95VZJo2Om+yJxtVt9tt8pxUiHc7TqRCippqNyigig5AvopQhTHvnbqotqSzmrQ/7O1sz+NzbjqGgfCvjdKh20QI9V0nNCchc6W5AYOVJDgMg7xuYY3Nxc2EVG/lrqM2mIM2mL7RNhWMvX24lFvOkyO+A8jN4i+YE5TGs/Q0WKUWjNzFIQkLbaT6CojZBRvS9CXdK+AWGC4bSIHhNpIBDMKDyWF2j1wbyRj8+kAkm9QdM8zdyvdg77kdlCZ7NEycLVHZFAzu7nNfQ7qXiFAdC9s1JopVXdV9rYatvoZLndeZfh4V4NuAawDM0wK2nFl2fjUWLhl+271KPRZDjX0ogk1d23fLKOgM59RBwBm5jZoJdZ/x+y+CtQpdgnE8ttloEzzKxM8b7mFOGraa0me6XWX9+XqI+1EpznfLNBrUZfuKQMw6dkSbwos67UYoT+eDwfa56VAj3tYVJ7nqDxOnOcJhKeD+bKenZe/0KYDcJuQ9RfSa6QSbBLwz5xBomgpdXCpplluh+D4vWSFZOnfBEmm7wqNQmGNhvaYW/933y74ageG6tYMHKlzWaaQMnrQh75eY="
 script:
