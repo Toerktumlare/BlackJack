@@ -12,10 +12,13 @@ public class DeckHandler {
     private static int DEFAULT_NUMBER_OF_DECKS = 6;
     private Deck deck;
 
-
     public DeckHandler() {
         deck = new Deck(DEFAULT_NUMBER_OF_DECKS);
         DeckUtil.shuffle(deck.getCards());
+    }
+
+    public DeckHandler(Deck deck) {
+        this.deck = deck;
     }
 
     public Card getCard() {

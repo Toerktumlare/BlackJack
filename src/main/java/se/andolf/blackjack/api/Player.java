@@ -12,16 +12,19 @@ public class Player {
 
 	private static final Logger logger = LogManager.getLogger(Player.class);
     private final boolean isDealer;
-	private final String name;
-	private final Brain brain;
+    private int currentHand = 0;
+    private final String name;
+    private final Brain brain;
     private final List<Hand> hands;
-    private final Statistics statistics;
-
-	private int currentHand = 0;
+    private final PlayerStatistic playerStatistic;
 
 	public Player(String name) {
 		this(name, new DumbBrain(), false);
 	}
+
+    public Player(String name, boolean isDealer) {
+        this(name, new DumbBrain(), isDealer);
+    }
 
 	public Player(String name, Brain brain) {
         this(name, brain, false);
@@ -32,15 +35,12 @@ public class Player {
         this.hands = new ArrayList<>();
         this.brain = brain;
         this.isDealer = isDealer;
-        statistics = new Statistics();
+        playerStatistic = new PlayerStatistic();
     }
-	
-	public void addCard(Card card) {
-		
-		if(hands.isEmpty()){
-			hands.add(new Hand());
-		}
-		
+
+    public void addCard(Card card) {
+        if(hands.isEmpty())
+            hands.add(new Hand());
 		hands.get(currentHand).addCard(card);
 	}
 
@@ -48,7 +48,7 @@ public class Player {
 		return brain.getChoice(hands.get(currentHand));
 	}
 	
-	public void clearCurrentHand() {		
+	public void clearHand() {
 		hands.remove(currentHand);
 		logger.info("Players cards removed");
 	}
@@ -61,9 +61,10 @@ public class Player {
 		return name;
 	}
 
-	public Hand getCurrentHand() {
+	public Hand getHand() {
 		return hands.get(currentHand);
 	}
+
 	public int getCurrentHandIndex(){
 		return currentHand;
 	}
@@ -94,12 +95,12 @@ public class Player {
         return isDealer;
     }
 
-    public Statistics getStatistics() {
-        return statistics;
+    public PlayerStatistic getStatistics() {
+        return playerStatistic;
     }
 
     @Override
     public String toString() {
-        return "Player: " + name + "\n" + statistics.toString();
+        return "Player: " + name + "\n" + playerStatistic.toString();
     }
 }
