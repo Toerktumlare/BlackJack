@@ -1,11 +1,10 @@
 language: java
 
-
-sudo: required
+sudo: false
+install: true
 
 addons:
   sonarqube:
-    organization: ${SONAR_ORGANIZATION}
     token:
       secure: "AjaYBNGQnh8d1xvks7WnVIrGFPrD6hDPQQEWjTdVsMOZkODCkIusgVE0yU+7tNofLQqEbuKurwjHWUX0Reoqq7ayHQe+DhW3D8ohaNUxU39zRQ+0a/2TkhPKiY1kNopmoSb5utzg2LFDceJZD+IymhqwhCpxCRGja8YgH2w0je+WP5ZDnRihyePX+5EJUf392Lncn51VsK28o5qODS5x5QWK0kHBuV5p/JwZwcTPgflydTG5q5U86s2lJLm/sFzks46OJQwIraJTf7J6T43eIpuCPRGJhp56R05cUuEz5UpMNNJ9mgUyuQAeVOLogZhJRpro9aC2R9LN3Jld3BHe4EQ8ysHRJsD55dK9rPC7Uv1lTO0iZxIqwwf94Xf4l+KWUiHQDQXPPiGbeIEjql65Wg521mIhfpjBRYoWYQfNi3EsS4PFgCj1TBUHt/SxJIoabnpKtI/dFCa05XG2z158jfrOplD2brvT7NxLt/MBfe20hG6fEWndcp37ZwSUJUgXa3wwBFpCEzvvcyN+lqLTidQ08C7CqfQ42Xk5wDHtR3kShbe0rbWQPO/p2pVBOuSRvdzAE5f371C6rZRoV0VpXtk1AtzzhXFEnboxfYL197Reu6I3CV6hsdxuw2qKtfU4+6Qmt+YceNtMYSIi2CohOWLylOIgZskEFD/d/6Z3jWY="
 
