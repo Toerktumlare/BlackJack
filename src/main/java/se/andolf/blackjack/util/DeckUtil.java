@@ -10,6 +10,9 @@ import java.util.Random;
  */
 public final class DeckUtil {
 
+    private DeckUtil() {
+    }
+
     public static List<Card> shuffle(List<Card> deck) {
 
         final Random random = new Random();

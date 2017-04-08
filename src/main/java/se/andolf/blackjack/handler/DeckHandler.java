@@ -9,7 +9,7 @@ import se.andolf.blackjack.util.DeckUtil;
  */
 public class DeckHandler {
 
-    private static int DEFAULT_NUMBER_OF_DECKS = 6;
+    private static final int DEFAULT_NUMBER_OF_DECKS = 6;
     private Deck deck;
 
     public DeckHandler() {

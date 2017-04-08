@@ -16,7 +16,6 @@ import static se.andolf.blackjack.api.Deal.*;
 public class Game {
 
     private static final Logger logger = LogManager.getLogger(Game.class);
-    private static final int DEFAULT_NUMBER_OF_ROUNDS = 1000;
 
     private int rounds;
 
@@ -36,11 +35,6 @@ public class Game {
     protected void init() {
 		deal(ALL);
 		deal(PLAYERS);
-	}
-
-    private void dealDealerOneCard() {
-		dealer.addCard(deckHandler.getCard());
-		logger.info("Dealer has: " + dealer.getHand().getValue());
 	}
 
 	public void start() throws GameException {

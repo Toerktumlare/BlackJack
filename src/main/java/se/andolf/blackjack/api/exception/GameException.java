@@ -3,7 +3,7 @@ package se.andolf.blackjack.api.exception;
 /**
  * @author Thomas on 2017-04-08.
  */
-public class GameException extends Throwable {
+public class GameException extends Exception {
 
     public GameException() {
         super();

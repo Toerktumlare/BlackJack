@@ -7,7 +7,10 @@ import java.util.List;
 
 public final class Checks {
 
-	public static boolean isBust(int currentValue) {
+    private Checks() {
+    }
+
+    public static boolean isBust(int currentValue) {
         return currentValue > 21;
     }
 

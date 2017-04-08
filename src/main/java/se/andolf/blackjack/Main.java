@@ -13,6 +13,9 @@ public class Main {
 
     private static final Logger logger = LogManager.getLogger(Main.class);
 
+    private Main() {
+    }
+
     public static void main(String[] args) {
 
         final Game game = new GameBuilder()
