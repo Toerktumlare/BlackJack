@@ -4,11 +4,12 @@ jdk:
 sudo: required
 addons:
   sonarqube:
+    organization: ${SONAR_ORGANIZATION}
     token:
-      secure: RN9cfksze6zSAK8dv+uH0Tn+18mwtB48/f91BRCFSXEley4IgXFjaB6Ph3K2muPVrqqXI+OH42PSKylu9cFuoNbh0GGdLn/oz0JV5mZCTQfgHQ9xxGqu3mopcAnawEIMaVrAN1Pdpt4DFB48Zk1V32cwWHxUw/GjLy8iM9U4WG1lgfaayj4oq4aOoKmF8R9xjKj3HYw4foXEaUjl5fA+c61V8BQFyxGnw/QAWPa5pdpr8Lyergunp6OLDxMoyndkM8F3G88raJe9D+wClhXxJHsjQs22KvciNWUqwN8xJOAuS4u64t761N33TA0KtCMNeCp0ZKTQ/eaMP+2AJuZcauxOD/Cr1SqP1zWB2D1GoG5QDlMdLQCfUKcJ3z3LIETsCPBpSVMlSFp3b4EVJ9LodfTjzt4ulOcd3Jhey1nBpcr39pZ+yGsJzB5cTx5PYcAPKWcfRWAyrgk5or7bl6NjVVWrKM25kK3yeg25xTrhKZXqFVImM/S6K+XLuQ9wp572Lmk9TDH5WG7rVC0m7kBTUIoDljxSu8oYeCV+KPBLDfFPk7tFu2qLSo0SwoC5qVrXhOv+hvrSu4BP4ujeZAvF1/iQRQrINZIKluutjvwL3GucrJaf4/0ttInQCrKAi+ERWXI6xO6JMFBKNqH7Uhbqu0hb3rAwzCnjxkmrSFWzczE=
-script: mvn clean package
-after_success:
-- mvn clean verify org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+      secure: ${SONAR_TOKEN}
+script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+
 cache:
   directories:
   - $HOME/.m2/repository
