@@ -7,10 +7,12 @@ import se.andolf.blackjack.brain.DumbBrain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Player {
 
 	private static final Logger logger = LogManager.getLogger(Player.class);
+    private String id;
     private final boolean isDealer;
     private int currentHand = 0;
     private final String name;
@@ -36,6 +38,11 @@ public class Player {
         this.brain = brain;
         this.isDealer = isDealer;
         playerStatistic = new PlayerStatistic();
+        id = UUID.randomUUID().toString();
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void addCard(Card card) {

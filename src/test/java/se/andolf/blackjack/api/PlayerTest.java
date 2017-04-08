@@ -2,8 +2,7 @@ package se.andolf.blackjack.api;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Thomas on 2017-04-08.
@@ -54,5 +53,15 @@ public class PlayerTest {
         player.addCard(new Card(Rank.KING, Suit.SPADES));
         player.addCard(new Card(Rank.QUEEN, Suit.DIAMONDS));
         assertEquals(Choice.STAND, player.getChoice());
+    }
+
+    @Test
+    public void shouldGenerateAUniqueId(){
+        final Player player = new Player("Thomas");
+        final Player player2 = new Player("Thomas");
+        assertNotNull(player.getId());
+        assertNotNull(player2.getId());
+        assertTrue(player.getName().equals(player2.getName()));
+        assertFalse(player.getId().equals(player2.getId()));
     }
 }

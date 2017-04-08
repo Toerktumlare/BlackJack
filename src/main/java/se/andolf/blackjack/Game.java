@@ -9,10 +9,10 @@ import se.andolf.blackjack.handler.DeckHandler;
 import se.andolf.blackjack.util.Checks;
 
 import java.util.List;
+import java.util.Optional;
 
 import static se.andolf.blackjack.api.Choice.*;
-import static se.andolf.blackjack.api.Deal.ALL;
-import static se.andolf.blackjack.api.Deal.PLAYERS;
+import static se.andolf.blackjack.api.Deal.*;
 
 public class Game {
 
@@ -204,7 +204,7 @@ public class Game {
 
 			if (dealersChoice == HIT) {
 				logger.info(dealer.getName() + " pulls a card");
-				dealDealerOneCard();
+				deal(DEALER);
 			}
 
 			else if (dealersChoice == STAND) {
@@ -221,18 +221,25 @@ public class Game {
 
 	private void clearCards() {
         players.stream().forEach(player -> player.getHands().clear());
-		dealer.getHands().clear();
 	}
 
     public List<Player> getPlayers() {
         return players;
     }
 
-    protected void deal(Deal deal) {
+    public Player getPlayer(String id){
+        final Optional<Player> player = players.stream().filter(p -> p.getId().equals(id)).distinct().findFirst();
+        if(player.isPresent())
+            return player.get();
+        else
+            return null;
+    }
+
+    void deal(Deal deal) {
         deal(deal, 1);
     }
 
-    protected void deal(Deal who, int cards) {
+    private void deal(Deal who, int cards) {
         switch (who) {
             case DEALER:
                 players.stream().filter(Player::isDealer).findFirst().ifPresent(p -> p.addCard(deckHandler.getCard()));
@@ -243,5 +250,13 @@ public class Game {
             default:
                 players.stream().forEach(p -> p.addCard(deckHandler.getCard()));
         }
+    }
+
+    Player getDealer() {
+        final Optional<Player> player = players.stream().filter(Player::isDealer).distinct().findFirst();
+        if(player.isPresent())
+            return player.get();
+        else
+            return null;
     }
 }
