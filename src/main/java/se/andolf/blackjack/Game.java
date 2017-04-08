@@ -9,7 +9,6 @@ import se.andolf.blackjack.handler.DeckHandler;
 import se.andolf.blackjack.util.Checks;
 
 import java.util.List;
-import java.util.Optional;
 
 import static se.andolf.blackjack.api.Choice.*;
 import static se.andolf.blackjack.api.Deal.*;
@@ -56,7 +55,7 @@ public class Game {
 
 			logger.info("");
 			logger.info("---- CHECKING BLACKJACKS ----");
-			checkBlackJacks();
+			blackJackCheck();
 			logger.info("---- BLACKJACK CHECK HAS ENDED ----");
 
 			logger.info("");
@@ -66,7 +65,7 @@ public class Game {
 
 			logger.info("");
 			logger.info("---- CHECKING BLACKJACKS ----");
-			checkBlackJacks();
+			blackJackCheck();
 			logger.info("---- BLACKJACK CHECK HAS ENDED ----");
 
 			logger.info("");
@@ -74,7 +73,7 @@ public class Game {
 			startDealerRound();
 			logger.info("");
 			logger.info("---- COMPARING HANDS ----");
-			compareHands();
+			winCheck();
 			logger.info("");
 			logger.info("---- GAME OVER RESETTING GAME ----");
 			clearCards();
@@ -90,14 +89,14 @@ public class Game {
         players.stream().forEach(player -> logger.info(player.toString()));
     }
 
-	private void checkBlackJacks() {
+	private void blackJackCheck() {
 
 		for (Player player : players) {
 			for (int i = 0; i < player.getHands().size(); i++) {
 
 				player.setCurrentHand(i);
 
-				if (Checks.isBlackJack(player.getHands().get(i))) {
+				if (Checks.isBlackJack(player.getHand())) {
 
 					logger.info("Player " + player.getName() + " HAS BLACKJACK WIIIHUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU!!!!!!!!");
 					logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
@@ -110,7 +109,7 @@ public class Game {
 		}
 	}
 
-	private void compareHands() {
+	private void winCheck() {
 
 		for (Player player : players) {
 			for (int i = 0; i < player.getHands().size(); i++) {
@@ -132,7 +131,6 @@ public class Game {
 				}
 			}
 		}
-
 	}
 
 	private void startPlayerRounds() {
@@ -223,18 +221,6 @@ public class Game {
         players.stream().forEach(player -> player.getHands().clear());
 	}
 
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public Player getPlayer(String id){
-        final Optional<Player> player = players.stream().filter(p -> p.getId().equals(id)).distinct().findFirst();
-        if(player.isPresent())
-            return player.get();
-        else
-            return null;
-    }
-
     void deal(Deal deal) {
         deal(deal, 1);
     }
@@ -252,11 +238,15 @@ public class Game {
         }
     }
 
+    public Player getPlayer(String id){
+        return players.stream().filter(p -> p.getId().equals(id)).distinct().findFirst().orElse(null);
+    }
+
     Player getDealer() {
-        final Optional<Player> player = players.stream().filter(Player::isDealer).distinct().findFirst();
-        if(player.isPresent())
-            return player.get();
-        else
-            return null;
+        return players.stream().filter(Player::isDealer).distinct().findFirst().orElse(null);
+    }
+
+    public List<Player> getPlayers() {
+        return players;
     }
 }
