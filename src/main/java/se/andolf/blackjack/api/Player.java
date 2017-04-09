@@ -54,11 +54,10 @@ public class Player {
 	public Choice getChoice() {
 		return brain.getChoice(hands.get(currentHand));
 	}
-	
-	public void clearHand() {
-		hands.remove(currentHand);
-		logger.info("Players cards removed");
-	}
+
+    public void clearHand(int index) {
+        hands.remove(index);
+    }
 
 	public List<Hand> getHands() {
 		return hands;
@@ -71,6 +70,10 @@ public class Player {
 	public Hand getHand() {
 		return hands.get(currentHand);
 	}
+
+    public Hand getHand(int index) {
+        return hands.get(index);
+    }
 
 	public int getCurrentHandIndex(){
 		return currentHand;

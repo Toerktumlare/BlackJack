@@ -9,11 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static se.andolf.blackjack.api.Deal.ALL;
-import static se.andolf.blackjack.api.Deal.DEALER;
-import static se.andolf.blackjack.api.Deal.PLAYERS;
+import static se.andolf.blackjack.api.Deal.*;
 
 /**
  * @author Thomas on 2017-04-08.
@@ -105,5 +102,94 @@ public class GameTest {
 
         assertEquals(2, game.getPlayer(player.getId()).getHand().getCards().size());
         assertEquals(1, game.getDealer().getHand().getCards().size());
+    }
+
+    @Test
+    public void playPlayerHandsUntilStand() {
+        final List<Card> cards = new ArrayList<>();
+        cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
+        cards.add(new Card(Rank.NINE, Suit.SPADES));
+        cards.add(new Card(Rank.KING, Suit.HEARTS));
+        cards.add(new Card(Rank.KING, Suit.DIAMONDS));
+        cards.add(new Card(Rank.KING, Suit.CLUBS));
+        final Deck deck = new Deck(cards);
+        final Player player = new Player("Thomas");
+        final Player player2 = new Player("Frida");
+        final Game game = new GameBuilder()
+                .setDeckHandler(new DeckHandler(deck))
+                .addPlayer(player)
+                .addPlayer(player2)
+                .build();
+
+        game.init();
+        game.play(player);
+        game.play(player2);
+
+        assertEquals(17, player.getHand().getValue());
+        assertEquals(19, player2.getHand().getValue());
+    }
+
+    @Test
+    public void playAllPlayerHandsUntilStand() {
+        final List<Card> cards = new ArrayList<>();
+        cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
+        cards.add(new Card(Rank.NINE, Suit.SPADES));
+        cards.add(new Card(Rank.KING, Suit.HEARTS));
+        cards.add(new Card(Rank.KING, Suit.DIAMONDS));
+        cards.add(new Card(Rank.KING, Suit.CLUBS)); //Dealers card
+        cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
+        cards.add(new Card(Rank.FIVE, Suit.DIAMONDS));
+        cards.add(new Card(Rank.NINE, Suit.SPADES));
+        cards.add(new Card(Rank.KING, Suit.HEARTS));
+
+        // Round starts here
+        cards.add(new Card(Rank.KING, Suit.DIAMONDS));
+        cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
+        cards.add(new Card(Rank.FOUR, Suit.DIAMONDS));
+        final Deck deck = new Deck(cards);
+        final Player player = new Player("Thomas");
+        final Player player2 = new Player("Frida");
+        final Player player3 = new Player("Kalle");
+        final Player player4 = new Player("Anders");
+        final Game game = new GameBuilder()
+                .setDeckHandler(new DeckHandler(deck))
+                .addPlayer(player)
+                .addPlayer(player2)
+                .addPlayer(player3)
+                .addPlayer(player4)
+                .build();
+
+        game.init();
+        game.play(game.getPlayers());
+
+        assertEquals(24, player.getHand().getValue());
+        assertEquals(21, player2.getHand().getValue());
+        assertEquals(19, player3.getHand().getValue());
+        assertEquals(20, player4.getHand().getValue());
+    }
+
+    @Test
+    public void shouldClearPlayerCardsIfBlackJackDuringCheck(){
+        final List<Card> cards = new ArrayList<>();
+        cards.add(new Card(Rank.KING, Suit.DIAMONDS));
+        cards.add(new Card(Rank.NINE, Suit.SPADES));
+        cards.add(new Card(Rank.KING, Suit.HEARTS));
+        cards.add(new Card(Rank.ACE, Suit.DIAMONDS));
+        cards.add(new Card(Rank.KING, Suit.CLUBS));
+
+        final Deck deck = new Deck(cards);
+        final Player player = new Player("Thomas");
+        final Player player2 = new Player("Frida");
+        final Game game = new GameBuilder()
+                .setDeckHandler(new DeckHandler(deck))
+                .addPlayer(player)
+                .addPlayer(player2)
+                .build();
+        game.init();
+
+        game.checkBlackJack(game.getPlayers());
+
+        assertEquals(0, player.getHands().size());
+        assertEquals(1, player2.getHands().size());
     }
 }

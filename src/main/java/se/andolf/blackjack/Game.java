@@ -9,6 +9,7 @@ import se.andolf.blackjack.handler.DeckHandler;
 import se.andolf.blackjack.util.Checks;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static se.andolf.blackjack.api.Choice.*;
 import static se.andolf.blackjack.api.Deal.*;
@@ -88,13 +89,11 @@ public class Game {
 		for (Player player : players) {
 			for (int i = 0; i < player.getHands().size(); i++) {
 
-				player.setCurrentHand(i);
-
-				if (Checks.isBlackJack(player.getHand())) {
+				if (Checks.isBlackJack(player.getHand(i))) {
 
 					logger.info("Player " + player.getName() + " HAS BLACKJACK WIIIHUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU!!!!!!!!");
 					logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
-					player.clearHand();
+					player.clearHand(i);
 
                     player.getStatistics().addBlackJack();
                     player.getStatistics().addWin();
@@ -242,5 +241,33 @@ public class Game {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    void play(Player player) {
+        boolean isPlaying = true;
+        while (isPlaying) {
+            final Choice choice = player.getChoice();
+            if (choice == HIT) {
+                player.addCard(deckHandler.getCard());
+            }
+            else if (choice == STAND) {
+                isPlaying = false;
+            }
+        }
+    }
+
+    public void play(List<Player> players) {
+        players.stream().filter(player -> !player.isDealer()).forEach(this::play);
+    }
+
+    public void checkBlackJack(List<Player> players) {
+        players.stream().filter(player -> !player.isDealer()).forEach(player -> {
+            final List<Hand> hands = player.getHands();
+            IntStream.range(0, hands.size()).forEach(i -> {
+                if(Checks.isBlackJack(hands.get(i))){
+                    player.clearHand(i);
+                }
+            });
+        });
     }
 }
