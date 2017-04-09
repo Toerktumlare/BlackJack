@@ -1,11 +1,10 @@
 package se.andolf.blackjack.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import se.andolf.blackjack.api.Card;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Hand {
 
@@ -27,7 +26,7 @@ public class Hand {
 	public int getValue(){
 		
 		int currentValue = 0;
-		
+
 		for(Card card : cards){
 			currentValue += card.getValue();
 		}
