@@ -94,11 +94,7 @@ public class Game {
         dealer.getHands().clear();
 	}
 
-    void deal(Deal deal) {
-        deal(deal, 1);
-    }
-
-    private void deal(Deal who, int cards) {
+    public void deal(Deal who) {
         switch (who) {
             case DEALER:
                 dealer.addCard(deckHandler.getCard());
