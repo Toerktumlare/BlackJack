@@ -12,7 +12,6 @@ import java.util.List;
 public class GameBuilder {
 
     private DeckHandler deckHandler = new DeckHandler();
-    private int round = 1;
     private List<Player> players = new ArrayList<>();
 
     public GameBuilder setDeckHandler(DeckHandler deckHandler) {
@@ -26,7 +25,6 @@ public class GameBuilder {
     }
 
     public Game build() {
-        players.add(new Player("Dealer", true));
-        return new Game(round, players, deckHandler);
+        return new Game(players, deckHandler);
     }
 }

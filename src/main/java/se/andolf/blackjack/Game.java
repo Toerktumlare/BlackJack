@@ -13,78 +13,25 @@ import java.util.stream.IntStream;
 
 import static se.andolf.blackjack.api.Choice.*;
 import static se.andolf.blackjack.api.Deal.*;
+import static se.andolf.blackjack.api.Deal.ALL;
 
 public class Game {
 
     private static final Logger logger = LogManager.getLogger(Game.class);
-
-    private int rounds;
 
 	private List<Player> players;
 	private Player dealer;
     private GameStatistic gameStatistic;
     private DeckHandler deckHandler;
 
-	public Game(int rounds, List<Player> players, DeckHandler deckHandler) {
-        this.rounds = rounds;
+	public Game(List<Player> players, DeckHandler deckHandler) {
 		dealer = new Player("Dealer", new DumbBrain(), true);
 		this.deckHandler = deckHandler;
         this.players = players;
         gameStatistic = new GameStatistic();
 	}
 
-    protected void init() {
-		deal(ALL);
-		deal(PLAYERS);
-	}
-
-	public void start() throws GameException {
-        if(players.size() == 1)
-            throw new GameException("Add at least one player before you start a game.");
-
-		int played = 0;
-		while (played < rounds) {
-			logger.info("");
-			logger.info("---- INITIALIZING FIRST DEAL ----");
-			init();
-
-			logger.info("");
-			logger.info("---- CHECKING BLACKJACKS ----");
-			blackJackCheck();
-			logger.info("---- BLACKJACK CHECK HAS ENDED ----");
-
-			logger.info("");
-			logger.info("---- INITIAL DEAL ENDED, STARTING PLAYER sounds ----");
-			startPlayerRounds();
-			logger.info("---- PLAYER sounds ENDED ----");
-
-			logger.info("");
-			logger.info("---- CHECKING BLACKJACKS ----");
-			blackJackCheck();
-			logger.info("---- BLACKJACK CHECK HAS ENDED ----");
-
-			logger.info("");
-			logger.info("---- INITIAL PLAYER sounds ENDED, STARTING DEALERS ROUND ----");
-			startDealerRound();
-			logger.info("");
-			logger.info("---- COMPARING HANDS ----");
-			winCheck();
-			logger.info("");
-			logger.info("---- GAME OVER RESETTING GAME ----");
-			clearCards();
-			logger.info("---- GAME RESET ----");
-			gameStatistic.addRound();
-			played++;
-		}
-		logger.info("");
-		logger.info("---- PRINTING GAME STATISTICS ----");
-		gameStatistic.toString();
-		logger.info("");
-		logger.info("---- PRINTING PLAYER STATISTICS ----");
-        players.stream().forEach(player -> logger.info(player.toString()));
-    }
-
-	private void blackJackCheck() {
+	public void blackJackCheck() {
 
 		for (Player player : players) {
 			for (int i = 0; i < player.getHands().size(); i++) {
@@ -102,7 +49,7 @@ public class Game {
 		}
 	}
 
-	private void winCheck() {
+	public void winCheck() {
 
 		for (Player player : players) {
 			for (int i = 0; i < player.getHands().size(); i++) {
@@ -126,7 +73,7 @@ public class Game {
 		}
 	}
 
-	private void startPlayerRounds() {
+	public void startPlayerRounds() {
 		for (Player player : players) {
 			for (int i = 0; i < player.getHands().size(); i++) {
 				if (!player.getHands().isEmpty()) {
@@ -146,7 +93,7 @@ public class Game {
 
 			if (playerChoice == HIT) {
 				player.addCard(deckHandler.getCard());
-				playing = bustCheck(player);
+				playing = checkBust(player);
 			}
 			else if (playerChoice == STAND) {
 				playing = false;
@@ -172,7 +119,7 @@ public class Game {
 		gameStatistic.addDouble();
 	}
 
-	private boolean bustCheck(Player player) {
+	private boolean checkBust(Player player) {
 		if (Checks.isBust(player.getHand().getValue())) {
 
 			logger.info("Dealer says brain " + player.getName() + " is bust!");
@@ -187,7 +134,7 @@ public class Game {
 		return true;
 	}
 
-	private void startDealerRound() {
+	public void startDealerRound() {
 		boolean playing = true;
 		while (playing) {
 
@@ -210,7 +157,7 @@ public class Game {
 		}
 	}
 
-	private void clearCards() {
+	public void clearCards() {
         players.stream().forEach(player -> player.getHands().clear());
 	}
 
@@ -221,13 +168,14 @@ public class Game {
     private void deal(Deal who, int cards) {
         switch (who) {
             case DEALER:
-                players.stream().filter(Player::isDealer).findFirst().ifPresent(p -> p.addCard(deckHandler.getCard()));
+                dealer.addCard(deckHandler.getCard());
                 break;
             case PLAYERS:
-                players.stream().filter(p -> !p.isDealer()).forEach(p -> p.addCard(deckHandler.getCard()));
+                players.stream().forEach(p -> p.addCard(deckHandler.getCard()));
                 break;
             default:
                 players.stream().forEach(p -> p.addCard(deckHandler.getCard()));
+                dealer.addCard(deckHandler.getCard());
         }
     }
 
@@ -236,7 +184,7 @@ public class Game {
     }
 
     Player getDealer() {
-        return players.stream().filter(Player::isDealer).distinct().findFirst().orElse(null);
+        return dealer;
     }
 
     public List<Player> getPlayers() {
@@ -257,7 +205,7 @@ public class Game {
     }
 
     public void play(List<Player> players) {
-        players.stream().filter(player -> !player.isDealer()).forEach(this::play);
+        players.stream().forEach(this::play);
     }
 
     public void checkBlackJack(List<Player> players) {
@@ -269,5 +217,41 @@ public class Game {
                 }
             });
         });
+    }
+
+    public void run(GameState state) {
+        switch (state) {
+            case FIRST_DEAL:
+                deal(ALL);
+                deal(PLAYERS);
+                break;
+            case PLAYERS:
+                play(players);
+                break;
+            case DEALER:
+                startDealerRound();
+                break;
+            case CLEAR:
+                clearCards();
+                break;
+        }
+    }
+
+    public void run(GameState.Checks checks) {
+        switch (checks) {
+            case ALL:
+                break;
+            case BLACKJACK:
+                checkBlackJack(players);
+                break;
+            case TWENTYONE:
+                break;
+            case WIN:
+                winCheck();
+                break;
+            case BUST:
+
+                break;
+        }
     }
 }

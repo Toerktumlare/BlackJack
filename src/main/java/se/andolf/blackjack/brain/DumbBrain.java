@@ -13,7 +13,7 @@ public class DumbBrain implements Brain {
 		
 		int currentValue = hand.getValue();
 
-		if (currentValue < 16) {
+		if (currentValue <= 16) {
 			return HIT;
 		}
         return STAND;
