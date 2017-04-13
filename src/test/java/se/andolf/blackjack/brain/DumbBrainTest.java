@@ -29,11 +29,11 @@ public class DumbBrainTest {
     }
 
     @Test
-    public void standIfOnSixteen() {
+    public void hitIfOnSixteen() {
         final Hand hand = new Hand();
         hand.addCard(new Card(Rank.NINE, Suit.DIAMONDS));
         hand.addCard(new Card(Rank.SEVEN, Suit.HEARTS));
-        assertEquals(STAND, brain.getChoice(hand));
+        assertEquals(HIT, brain.getChoice(hand));
     }
 
     @Test
