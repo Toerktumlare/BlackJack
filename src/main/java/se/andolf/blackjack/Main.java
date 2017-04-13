@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import se.andolf.blackjack.api.GameBuilder;
 import se.andolf.blackjack.api.GameState;
 import se.andolf.blackjack.api.Player;
-import se.andolf.blackjack.api.exception.GameException;
 
 import static se.andolf.blackjack.api.GameState.*;
 
