@@ -3,6 +3,7 @@ package se.andolf.blackjack;
 import org.junit.Test;
 import se.andolf.blackjack.api.*;
 import se.andolf.blackjack.handler.DeckHandler;
+import se.andolf.blackjack.util.TestUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import static org.junit.Assert.*;
 import static se.andolf.blackjack.api.Deal.ALL;
 import static se.andolf.blackjack.api.GameState.Checks.BLACKJACK;
 import static se.andolf.blackjack.api.GameState.*;
+import static se.andolf.blackjack.api.GameState.Checks.BUST;
 
 /**
  * @author Thomas on 2017-04-08.
@@ -30,18 +32,13 @@ public class GameTest {
         final List<Card> cards = new ArrayList<>();
         cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
         cards.add(new Card(Rank.NINE, Suit.HEARTS));
-        final Deck deck = new Deck(cards);
-        final Player thomas = new Player("Thomas");
-        final Player frida = new Player("Frida");
-        final Game game = new GameBuilder()
-                .setDeckHandler(new DeckHandler(deck))
-                .addPlayer(thomas)
-                .addPlayer(frida)
-                .build();
+        final Player player = new Player("Thomas");
+        final Player player2 = new Player("Frida");
+        final Game game = TestUtil.getGame(cards, player, player2);
         game.deal(Deal.PLAYERS);
 
-        assertEquals(7, game.getPlayer(thomas.getId()).getHand().getCards().stream().findFirst().get().getValue());
-        assertEquals(9, game.getPlayer(frida.getId()).getHand().getCards().stream().findFirst().get().getValue());
+        assertEquals(7, game.getPlayer(player.getId()).getHand().getCards().stream().findFirst().get().getValue());
+        assertEquals(9, game.getPlayer(player2.getId()).getHand().getCards().stream().findFirst().get().getValue());
         assertTrue(game.getDealer().getHands().isEmpty());
     }
 
@@ -51,18 +48,13 @@ public class GameTest {
         cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
         cards.add(new Card(Rank.NINE, Suit.HEARTS));
         cards.add(new Card(Rank.TWO, Suit.DIAMONDS));
-        final Deck deck = new Deck(cards);
-        final Player thomas = new Player("Thomas");
-        final Player frida = new Player("Frida");
-        final Game game = new GameBuilder()
-                .setDeckHandler(new DeckHandler(deck))
-                .addPlayer(thomas)
-                .addPlayer(frida)
-                .build();
+        final Player player = new Player("Thomas");
+        final Player player2 = new Player("Frida");
+        final Game game = TestUtil.getGame(cards, player, player2);
         game.deal(ALL);
 
-        assertEquals(7, game.getPlayer(thomas.getId()).getHand().getCards().stream().findFirst().get().getValue());
-        assertEquals(9, game.getPlayer(frida.getId()).getHand().getCards().stream().findFirst().get().getValue());
+        assertEquals(7, game.getPlayer(player.getId()).getHand().getCards().stream().findFirst().get().getValue());
+        assertEquals(9, game.getPlayer(player2.getId()).getHand().getCards().stream().findFirst().get().getValue());
         assertEquals(2, game.getDealer().getHand().getCards().stream().findFirst().get().getValue());
     }
 
@@ -70,12 +62,8 @@ public class GameTest {
     public void shouldDealOnlyTheDealerOneCard(){
         final List<Card> cards = new ArrayList<>();
         cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
-        final Deck deck = new Deck(cards);
         final Player player = new Player("Thomas");
-        final Game game = new GameBuilder()
-                .setDeckHandler(new DeckHandler(deck))
-                .addPlayer(player)
-                .build();
+        final Game game = TestUtil.getGame(cards, player);
         game.deal(Deal.DEALER);
         assertEquals(7, game.getDealer().getHand().getCards().stream().findFirst().get().getValue());
     }
@@ -86,12 +74,8 @@ public class GameTest {
         cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
         cards.add(new Card(Rank.NINE, Suit.SPADES));
         cards.add(new Card(Rank.ACE, Suit.HEARTS));
-        final Deck deck = new Deck(cards);
         final Player player = new Player("Thomas");
-        final Game game = new GameBuilder()
-                .setDeckHandler(new DeckHandler(deck))
-                .addPlayer(player)
-                .build();
+        final Game game = TestUtil.getGame(cards, player);
         game.run(FIRST_DEAL);
 
         assertEquals(2, game.getPlayer(player.getId()).getHand().getCards().size());
@@ -106,14 +90,9 @@ public class GameTest {
         cards.add(new Card(Rank.KING, Suit.HEARTS));
         cards.add(new Card(Rank.KING, Suit.DIAMONDS));
         cards.add(new Card(Rank.KING, Suit.CLUBS));
-        final Deck deck = new Deck(cards);
         final Player player = new Player("Thomas");
         final Player player2 = new Player("Frida");
-        final Game game = new GameBuilder()
-                .setDeckHandler(new DeckHandler(deck))
-                .addPlayer(player)
-                .addPlayer(player2)
-                .build();
+        final Game game = TestUtil.getGame(cards, player, player2);
 
         game.run(FIRST_DEAL);
         game.play(player);
@@ -140,19 +119,11 @@ public class GameTest {
         cards.add(new Card(Rank.KING, Suit.DIAMONDS));
         cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
         cards.add(new Card(Rank.FOUR, Suit.DIAMONDS));
-        final Deck deck = new Deck(cards);
         final Player player = new Player("Thomas");
         final Player player2 = new Player("Frida");
         final Player player3 = new Player("Kalle");
         final Player player4 = new Player("Anders");
-        final Game game = new GameBuilder()
-                .setDeckHandler(new DeckHandler(deck))
-                .addPlayer(player)
-                .addPlayer(player2)
-                .addPlayer(player3)
-                .addPlayer(player4)
-                .build();
-
+        final Game game = TestUtil.getGame(cards, player, player2, player3, player4);
         game.run(FIRST_DEAL);
         game.run(PLAYERS);
 
@@ -176,8 +147,7 @@ public class GameTest {
         final Player player2 = new Player("Frida");
         final Game game = new GameBuilder()
                 .setDeckHandler(new DeckHandler(deck))
-                .addPlayer(player)
-                .addPlayer(player2)
+                .addPlayers(player, player2)
                 .build();
         game.run(FIRST_DEAL);
         game.run(BLACKJACK);
@@ -204,5 +174,39 @@ public class GameTest {
         game.run(DEALER);
 
         assertEquals(19, game.getDealer().getHand().getValue());
+    }
+
+    @Test
+    public void shouldBustCheckDealerAndPlayers(){
+        final List<Card> cards = new ArrayList<>();
+        cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
+        cards.add(new Card(Rank.NINE, Suit.SPADES));
+        cards.add(new Card(Rank.SEVEN, Suit.SPADES));
+        cards.add(new Card(Rank.KING, Suit.DIAMONDS));
+        cards.add(new Card(Rank.THREE, Suit.SPADES));
+        cards.add(new Card(Rank.KING, Suit.SPADES));
+        final Player player = new Player("Thomas");
+        final Game game = TestUtil.getGame(cards, player);
+        game.run(FIRST_DEAL);
+        game.run(PLAYERS);
+        game.run(DEALER);
+        game.run(BUST);
+
+        assertEquals(0, player.getHands().size());
+        assertEquals(0, game.getDealer().getHands().size());
+    }
+
+    @Test
+    public void shouldClearAllCards(){
+        final List<Card> cards = new ArrayList<>();
+        cards.add(new Card(Rank.SEVEN, Suit.DIAMONDS));
+        cards.add(new Card(Rank.NINE, Suit.SPADES));
+        cards.add(new Card(Rank.SEVEN, Suit.SPADES));
+        final Player player = new Player("Thomas");
+        final Game game = TestUtil.getGame(cards, player);
+        game.run(FIRST_DEAL);
+        game.run(CLEAR);
+        assertEquals(0, player.getHands().size());
+        assertEquals(0, game.getDealer().getHands().size());
     }
 }

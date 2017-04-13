@@ -3,7 +3,6 @@ package se.andolf.blackjack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.andolf.blackjack.api.*;
-import se.andolf.blackjack.api.exception.GameException;
 import se.andolf.blackjack.brain.DumbBrain;
 import se.andolf.blackjack.handler.DeckHandler;
 import se.andolf.blackjack.util.Checks;
@@ -11,9 +10,10 @@ import se.andolf.blackjack.util.Checks;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static se.andolf.blackjack.api.Choice.*;
-import static se.andolf.blackjack.api.Deal.*;
-import static se.andolf.blackjack.api.Deal.ALL;
+import static se.andolf.blackjack.api.Choice.HIT;
+import static se.andolf.blackjack.api.Choice.STAND;
+import static se.andolf.blackjack.api.GameState.FIRST_DEAL;
+import static se.andolf.blackjack.api.GameState.GAME;
 
 public class Game {
 
@@ -21,105 +21,36 @@ public class Game {
 
 	private List<Player> players;
 	private Player dealer;
-    private GameStatistic gameStatistic;
+    private GameStatistic statistics;
     private DeckHandler deckHandler;
+    private Rules rules;
 
-	public Game(List<Player> players, DeckHandler deckHandler) {
+    public Game(List<Player> players, DeckHandler deckHandler, Rules rules) {
 		dealer = new Player("Dealer", new DumbBrain(), true);
 		this.deckHandler = deckHandler;
         this.players = players;
-        gameStatistic = new GameStatistic();
+        this.rules = rules;
+        statistics = new GameStatistic();
 	}
 
-	public void blackJackCheck() {
+	public void winCheck(List<Player> players) {
 
-		for (Player player : players) {
-			for (int i = 0; i < player.getHands().size(); i++) {
-
-				if (Checks.isBlackJack(player.getHand(i))) {
-
-					logger.info("Player " + player.getName() + " HAS BLACKJACK WIIIHUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU!!!!!!!!");
-					logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
-					player.clearHand(i);
-
-                    player.getStatistics().addBlackJack();
+        players.stream().forEach(player -> {
+            switch (rules.hasWon(player.getHand().getValue(), dealer.getHand().getValue())) {
+                case WIN:
                     player.getStatistics().addWin();
-				}
-			}
-		}
-	}
-
-	public void winCheck() {
-
-		for (Player player : players) {
-			for (int i = 0; i < player.getHands().size(); i++) {
-
-				player.setCurrentHand(i);
-
-				if (Checks.hasWon(player.getHand().getValue(), dealer.getHand().getValue())) {
-
-					logger.info("Player " + player.getName() + " WINS!");
-
-                    player.getStatistics().addWin();
-
-				} else {
-
-					logger.info("Player " + player.getName() + " LOOSES!");
-
+                    break;
+                case LOSS:
                     player.getStatistics().addLoss();
-
-				}
-			}
-		}
+                    break;
+                case DRAW:
+                    player.getStatistics().addDraw();
+                    break;
+            }
+        });
 	}
 
-	public void startPlayerRounds() {
-		for (Player player : players) {
-			for (int i = 0; i < player.getHands().size(); i++) {
-				if (!player.getHands().isEmpty()) {
-					player.setCurrentHand(i);
-					startPlayingSelectedHand(player);
-				}
-			}
-		}
-	}
-
-	private void startPlayingSelectedHand(Player player) {
-
-		boolean playing = true;
-		while (playing) {
-
-			final Choice playerChoice = player.getChoice();
-
-			if (playerChoice == HIT) {
-				player.addCard(deckHandler.getCard());
-				playing = checkBust(player);
-			}
-			else if (playerChoice == STAND) {
-				playing = false;
-			}
-			else if (playerChoice == SPLIT) {
-				doubleCards(player);
-			}
-		}
-	}
-
-	private void doubleCards(Player player) {
-		final Card secondCard = player.getHand().getCards().get(1);
-		
-		player.addHand(secondCard);
-		
-		player.removeCardFromCurrentHand(1);
-		
-		player.addCard(deckHandler.getCard());
-		player.setCurrentHand(player.getCurrentHandIndex()+1);
-		player.addCard(deckHandler.getCard());
-		player.setCurrentHand(player.getCurrentHandIndex()-1);
-
-		gameStatistic.addDouble();
-	}
-
-	private boolean checkBust(Player player) {
+	private void bustCheck(Player player) {
 		if (Checks.isBust(player.getHand().getValue())) {
 
 			logger.info("Dealer says brain " + player.getName() + " is bust!");
@@ -128,11 +59,12 @@ public class Game {
 
 			player.getStatistics().addBust();
 			player.getStatistics().addLoss();
-
-			return false;
 		}
-		return true;
 	}
+
+    private void bustCheck(List<Player> players) {
+        players.stream().forEach(this::bustCheck);
+    }
 
 	public void startDealerRound() {
 		boolean playing = true;
@@ -142,7 +74,7 @@ public class Game {
 
 			if (dealersChoice == HIT) {
 				logger.info(dealer.getName() + " pulls a card");
-				deal(DEALER);
+				deal(Deal.DEALER);
 			}
 
 			else if (dealersChoice == STAND) {
@@ -159,6 +91,7 @@ public class Game {
 
 	public void clearCards() {
         players.stream().forEach(player -> player.getHands().clear());
+        dealer.getHands().clear();
 	}
 
     void deal(Deal deal) {
@@ -208,7 +141,7 @@ public class Game {
         players.stream().forEach(this::play);
     }
 
-    public void checkBlackJack(List<Player> players) {
+    public void hasBlackJack(List<Player> players) {
         players.stream().filter(player -> !player.isDealer()).forEach(player -> {
             final List<Hand> hands = player.getHands();
             IntStream.range(0, hands.size()).forEach(i -> {
@@ -219,11 +152,25 @@ public class Game {
         });
     }
 
+    public void run(){
+        run(GAME);
+    }
+
     public void run(GameState state) {
         switch (state) {
+            case GAME:
+                run(FIRST_DEAL);
+                run(GameState.Checks.BLACKJACK);
+                run(GameState.PLAYERS);
+                run(GameState.DEALER);
+                run(GameState.Checks.BUST);
+                run(GameState.Checks.WIN);
+                run(GameState.CLEAR);
+                statistics.addRound();
+                break;
             case FIRST_DEAL:
-                deal(ALL);
-                deal(PLAYERS);
+                deal(Deal.ALL);
+                deal(Deal.PLAYERS);
                 break;
             case PLAYERS:
                 play(players);
@@ -242,16 +189,21 @@ public class Game {
             case ALL:
                 break;
             case BLACKJACK:
-                checkBlackJack(players);
+                hasBlackJack(players);
                 break;
             case TWENTYONE:
                 break;
             case WIN:
-                winCheck();
+                winCheck(players);
                 break;
             case BUST:
-
+                bustCheck(players);
+                bustCheck(dealer);
                 break;
         }
+    }
+
+    public Statistic getStatistics() {
+        return statistics;
     }
 }

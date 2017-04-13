@@ -25,7 +25,7 @@ public class Main {
                 .addPlayer(new Player("Thomas"))
                 .build();
         logger.info("---- STARTING GAME ----");
-        int rounds = 1;
+        int rounds = 100;
         int played = 0;
         while (played < rounds) {
             logger.info("");

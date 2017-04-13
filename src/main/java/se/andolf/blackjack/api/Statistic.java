@@ -12,6 +12,7 @@ public abstract class Statistic {
     private int busts = 0;
     private int wins = 0;
     private int losses = 0;
+    private int draws = 0;
 
     public int getLosses() {
         return losses;
@@ -67,5 +68,13 @@ public abstract class Statistic {
 
     public void addRound() {
         rounds++;
+    }
+
+    public void addDraw(){
+        draws++;
+    }
+
+    public int getDraws() {
+        return draws;
     }
 }
