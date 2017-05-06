@@ -10,6 +10,7 @@ import se.andolf.blackjack.util.Checks;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static java.util.Arrays.asList;
 import static se.andolf.blackjack.api.Choice.HIT;
 import static se.andolf.blackjack.api.Choice.STAND;
 import static se.andolf.blackjack.api.GameState.FIRST_DEAL;
@@ -36,6 +37,15 @@ public class Game {
 	public void winCheck(List<Player> players) {
 
         players.stream().forEach(player -> {
+
+            if(player.getHands().isEmpty()){
+                player.getStatistics().addLoss();
+                return;
+            } else if(dealer.getHands().isEmpty()){
+                player.getStatistics().addWin();
+                return;
+            }
+
             switch (rules.hasWon(player.getHand().getValue(), dealer.getHand().getValue())) {
                 case WIN:
                     player.getStatistics().addWin();
@@ -58,36 +68,12 @@ public class Game {
 			player.removeCurrentHand();
 
 			player.getStatistics().addBust();
-			player.getStatistics().addLoss();
 		}
 	}
 
     private void bustCheck(List<Player> players) {
         players.stream().forEach(this::bustCheck);
     }
-
-	public void startDealerRound() {
-		boolean playing = true;
-		while (playing) {
-
-			final Choice dealersChoice = dealer.getChoice();
-
-			if (dealersChoice == HIT) {
-				logger.info(dealer.getName() + " pulls a card");
-				deal(Deal.DEALER);
-			}
-
-			else if (dealersChoice == STAND) {
-				logger.info(dealer.getName() + " says I'LL STAND!");
-				playing = false;
-			}
-
-			if (Checks.isBust(dealer.getHand().getValue())) {
-				logger.info(dealer.getName() + " is bust!");
-				playing = false;
-			}
-		}
-	}
 
 	public void clearCards() {
         players.stream().forEach(player -> player.getHands().clear());
@@ -133,7 +119,7 @@ public class Game {
         }
     }
 
-    public void play(List<Player> players) {
+    private void play() {
         players.stream().forEach(this::play);
     }
 
@@ -150,6 +136,10 @@ public class Game {
 
     public void run(){
         run(GAME);
+    }
+
+    public void run(Deal deal){
+        deal(deal);
     }
 
     public void run(GameState state) {
@@ -169,10 +159,10 @@ public class Game {
                 deal(Deal.PLAYERS);
                 break;
             case PLAYERS:
-                play(players);
+                play();
                 break;
             case DEALER:
-                startDealerRound();
+                play(dealer);
                 break;
             case CLEAR:
                 clearCards();
@@ -199,7 +189,50 @@ public class Game {
         }
     }
 
+
     public Statistic getStatistics() {
         return statistics;
     }
+
+    public static class GameBuilder {
+
+        private DeckHandler deckHandler;
+        private List<Player> players;
+        private Rules rules;
+
+        public GameBuilder(DeckHandler deckHandler, Player... players) {
+            this.deckHandler = deckHandler;
+            this.players = asList(players);
+        }
+
+        public GameBuilder(Player... players) {
+            this.deckHandler = new DeckHandler();
+            this.players = asList(players);
+        }
+
+        public Game run() {
+            final Game game = getGame();
+            game.run();
+            return game;
+        }
+
+        public Game run(Deal deal) {
+            final Game game = getGame();
+            game.run(deal);
+            return game;
+        }
+
+        private Game getGame(){
+            if(rules == null)
+                this.rules = new StandardRules();
+            return new Game(players, deckHandler, rules);
+        }
+
+        public Game run(GameState state) {
+            final Game game = getGame();
+            game.run(state);
+            return game;
+        }
+    }
+
 }

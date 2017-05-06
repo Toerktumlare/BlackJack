@@ -2,7 +2,6 @@ package se.andolf.blackjack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import se.andolf.blackjack.api.GameBuilder;
 import se.andolf.blackjack.api.GameState;
 import se.andolf.blackjack.api.Player;
 
@@ -20,9 +19,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        final Game game = new GameBuilder()
-                .addPlayer(new Player("Thomas"))
-                .build();
+        final Game game = new Game.GameBuilder(new Player("Thomas"))
+                .run();
         logger.info("---- STARTING GAME ----");
         int rounds = 100;
         int played = 0;

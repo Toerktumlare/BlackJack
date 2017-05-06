@@ -2,6 +2,7 @@ package se.andolf.blackjack.handler;
 
 import se.andolf.blackjack.api.Card;
 import se.andolf.blackjack.api.Deck;
+import se.andolf.blackjack.api.Player;
 import se.andolf.blackjack.util.DeckUtil;
 
 /**
@@ -27,5 +28,9 @@ public class DeckHandler {
 
     public int size() {
         return deck.getCards().size();
+    }
+
+    public Deck getDeck() {
+        return deck;
     }
 }
