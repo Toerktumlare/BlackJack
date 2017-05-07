@@ -2,7 +2,6 @@ package se.andolf.blackjack.handler;
 
 import se.andolf.blackjack.api.Card;
 import se.andolf.blackjack.api.Deck;
-import se.andolf.blackjack.api.Player;
 import se.andolf.blackjack.util.DeckUtil;
 
 /**

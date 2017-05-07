@@ -15,6 +15,7 @@ import static se.andolf.blackjack.api.Choice.HIT;
 import static se.andolf.blackjack.api.Choice.STAND;
 import static se.andolf.blackjack.api.GameState.FIRST_DEAL;
 import static se.andolf.blackjack.api.GameState.GAME;
+import static se.andolf.blackjack.api.Rules.Outcome.*;
 
 public class Game {
 
@@ -35,38 +36,33 @@ public class Game {
 	}
 
 	public void winCheck(List<Player> players) {
-
         players.stream().forEach(player -> {
-
             if(player.getHands().isEmpty()){
                 player.getStatistics().addLoss();
-                return;
             } else if(dealer.getHands().isEmpty()){
                 player.getStatistics().addWin();
-                return;
-            }
-
-            switch (rules.hasWon(player.getHand().getValue(), dealer.getHand().getValue())) {
-                case WIN:
-                    player.getStatistics().addWin();
-                    break;
-                case LOSS:
-                    player.getStatistics().addLoss();
-                    break;
-                case DRAW:
-                    player.getStatistics().addDraw();
-                    break;
+            } else {
+                resolveOutcome(player);
             }
         });
 	}
 
-	private void bustCheck(Player player) {
+    private void resolveOutcome(Player player) {
+        final Rules.Outcome outcome = rules.hasWon(player.getHand().getValue(), dealer.getHand().getValue());
+        if (outcome == WIN) {
+            player.getStatistics().addWin();
+
+        } else if (outcome == LOSS) {
+            player.getStatistics().addLoss();
+
+        } else if (outcome == DRAW) {
+            player.getStatistics().addDraw();
+        }
+    }
+
+    private void bustCheck(Player player) {
 		if (Checks.isBust(player.getHand().getValue())) {
-
-			logger.info("Dealer says brain " + player.getName() + " is bust!");
-			logger.info("---- CLEARING PLAYER " + player.getName() + "'s CARDS ----");
 			player.removeCurrentHand();
-
 			player.getStatistics().addBust();
 		}
 	}
@@ -75,12 +71,12 @@ public class Game {
         players.stream().forEach(this::bustCheck);
     }
 
-	public void clearCards() {
+	private void clearCards() {
         players.stream().forEach(player -> player.getHands().clear());
         dealer.getHands().clear();
 	}
 
-    public void deal(Deal who) {
+    private void deal(Deal who) {
         switch (who) {
             case DEALER:
                 dealer.addCard(deckHandler.getCard());
@@ -123,7 +119,7 @@ public class Game {
         players.stream().forEach(this::play);
     }
 
-    public void hasBlackJack(List<Player> players) {
+    private void hasBlackJack(List<Player> players) {
         players.stream().filter(player -> !player.isDealer()).forEach(player -> {
             final List<Hand> hands = player.getHands();
             IntStream.range(0, hands.size()).forEach(i -> {
