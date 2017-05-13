@@ -60,7 +60,7 @@ public class DeckBuilder {
                 return getDeck(
                         new Card(Rank.KING, Suit.DIAMONDS),
                         new Card(Rank.NINE, Suit.SPADES),
-                        new Card(Rank.KING, Suit.HEARTS),
+                        new Card(Rank.SEVEN, Suit.HEARTS),
                         new Card(Rank.ACE, Suit.DIAMONDS),
                         new Card(Rank.KING, Suit.CLUBS)
                 );
@@ -103,6 +103,20 @@ public class DeckBuilder {
                         new Card(Rank.QUEEN, Suit.SPADES),
                         new Card(Rank.JACK, Suit.DIAMONDS),
                         new Card(Rank.KING, Suit.DIAMONDS)
+                );
+            case PLAYER_BLACKJACK_AFTER_DEAL:
+                return getDeck(
+                        new Card(Rank.ACE, Suit.DIAMONDS),
+                        new Card(Rank.SEVEN, Suit.SPADES),
+                        new Card(Rank.KING, Suit.SPADES)
+                );
+            case PLAYER_BLACKJACK_DEALER_TEN:
+                return getDeck(
+                        new Card(Rank.ACE, Suit.DIAMONDS),
+                        new Card(Rank.QUEEN, Suit.SPADES),
+                        new Card(Rank.KING, Suit.SPADES),
+                        new Card(Rank.THREE, Suit.HEARTS),
+                        new Card(Rank.FIVE, Suit.DIAMONDS)
                 );
             default:
                 return new DeckHandler();

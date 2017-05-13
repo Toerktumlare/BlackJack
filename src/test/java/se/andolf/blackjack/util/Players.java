@@ -8,7 +8,7 @@ import se.andolf.blackjack.api.Player;
 public enum Players {
     PLAYER_1("Thomas"),
     PLAYER_2("Frida"),
-    PLAYER_3("Adders"),
+    PLAYER_3("Anders"),
     PLAYER_4("Pelle");
 
     private Player player;

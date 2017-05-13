@@ -25,14 +25,6 @@ public class GameTest {
     }
 
     @Test
-    public void shouldAddTwoPlayersAndCreateADealer(){
-        final Game game = new Game.GameBuilder(Players.PLAYER_1.getPlayer(), Players.PLAYER_2.getPlayer()).run();
-        assertEquals(2, game.getPlayers().size());
-        assertNotNull(game.getDealer());
-    }
-
-
-    @Test
     public void shouldDealOnlyPlayersOneCard(){
         final Game game = new Game.GameBuilder(DeckBuilder.get(Decks.TWO_CARDS), Players.PLAYER_1.getPlayer(), Players.PLAYER_2.getPlayer()).run(Deal.PLAYERS);
         assertEquals(7, game.getPlayer(Players.PLAYER_1.getId()).getHand().getCards().stream().findFirst().get().getValue());

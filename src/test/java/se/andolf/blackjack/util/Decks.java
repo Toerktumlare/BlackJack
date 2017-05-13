@@ -16,6 +16,8 @@ public enum Decks {
         PLAYER_WINS,
         PLAYER_LOSS,
         PLAYER_DRAW,
-        TWO_PLAYERS_UNTIL_BOTH_STAND
+        TWO_PLAYERS_UNTIL_BOTH_STAND,
+        PLAYER_BLACKJACK_DEALER_TEN,
+        PLAYER_BLACKJACK_AFTER_DEAL
     }
 }
