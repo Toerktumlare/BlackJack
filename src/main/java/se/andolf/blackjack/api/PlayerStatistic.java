@@ -3,7 +3,7 @@ package se.andolf.blackjack.api;
 /**
  * @author Thomas on 2017-04-02.
  */
-public class PlayerStatistic extends Statistic {
+public class PlayerStatistic extends AbstractStatistic {
 
     @Override
     public String toString() {

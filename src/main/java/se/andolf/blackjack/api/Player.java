@@ -28,10 +28,6 @@ public class Player {
         this(name, new DumbBrain(), isDealer);
     }
 
-	public Player(String name, Brain brain) {
-        this(name, brain, false);
-	}
-
     public Player(String name, Brain brain, boolean isDealer) {
         this.name = name;
         this.hands = new ArrayList<>();
@@ -71,34 +67,8 @@ public class Player {
 		return hands.get(currentHand);
 	}
 
-    public Hand getHand(int index) {
-        return hands.get(index);
-    }
-
-	public int getCurrentHandIndex(){
-		return currentHand;
-	}
-
-	public void setCurrentHand(int currentHand) {
-		this.currentHand = currentHand;
-	}
-
 	public void removeCurrentHand(){
 		hands.remove(currentHand);
-	}
-
-	public void addHand() {
-		hands.add(new Hand());		
-	}
-	
-	public void addHand(Card card){
-		hands.add(new Hand());
-		hands.get(currentHand+1).addCard(card);
-        logger.info("---- NEW HAND CREATED WITH CARD " + card.toString() + " ----");
-	}
-	
-	public void removeCardFromCurrentHand(int index) {
-		hands.get(currentHand).removeCard(index);
 	}
 
     public boolean isDealer() {

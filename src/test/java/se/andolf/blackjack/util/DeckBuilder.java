@@ -78,16 +78,16 @@ public class DeckBuilder {
                         new Card(Rank.SEVEN, Suit.DIAMONDS),
                         new Card(Rank.NINE, Suit.SPADES),
                         new Card(Rank.SEVEN, Suit.SPADES),
-                        new Card(Rank.SEVEN, Suit.DIAMONDS),
-                        new Card(Rank.EIGHT, Suit.SPADES)
+                        new Card(Rank.EIGHT, Suit.SPADES),
+                        new Card(Rank.SIX, Suit.DIAMONDS)
                 );
             case PLAYER_LOSS:
                 return getDeck(
                         new Card(Rank.SEVEN, Suit.DIAMONDS),
                         new Card(Rank.NINE, Suit.SPADES),
-                        new Card(Rank.SEVEN, Suit.SPADES),
+                        new Card(Rank.QUEEN, Suit.SPADES),
                         new Card(Rank.THREE, Suit.DIAMONDS),
-                        new Card(Rank.QUEEN, Suit.SPADES)
+                        new Card(Rank.SEVEN, Suit.SPADES)
                 );
             case PLAYER_DRAW:
                 return getDeck(

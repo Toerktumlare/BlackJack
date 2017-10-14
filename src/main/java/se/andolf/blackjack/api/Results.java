@@ -3,7 +3,7 @@ package se.andolf.blackjack.api;
 /**
  * @author Thomas on 2017-04-08.
  */
-public class GameStatistic extends Statistic {
+public class Results extends AbstractStatistic {
 
     int players = 0;
 
@@ -17,7 +17,7 @@ public class GameStatistic extends Statistic {
 
     @Override
     public String toString() {
-        return "GameStatistic {" +
+        return "Results {" +
                 "rounds=" + getRounds() +
                 ", hands=" + getHands() +
                 ", doubles=" + getDoubles() +

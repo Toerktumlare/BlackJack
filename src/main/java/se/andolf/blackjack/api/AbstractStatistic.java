@@ -3,7 +3,7 @@ package se.andolf.blackjack.api;
 /**
  * @author Thomas on 2017-04-08.
  */
-public abstract class Statistic {
+public abstract class AbstractStatistic {
 
     private int rounds = 0;
     private int hands = 0;
