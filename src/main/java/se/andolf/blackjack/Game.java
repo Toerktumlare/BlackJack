@@ -15,7 +15,6 @@ import static java.util.Arrays.asList;
 import static se.andolf.blackjack.api.Choice.HIT;
 import static se.andolf.blackjack.api.Choice.STAND;
 import static se.andolf.blackjack.api.GameState.FIRST_DEAL;
-
 import static se.andolf.blackjack.api.Rules.Outcome.*;
 
 public class Game {
@@ -35,27 +34,27 @@ public class Game {
 		this.deckHandler = deckHandler;
         this.players = players;
         this.rules = rules;
-        statistics = new Statistics(new Results());
+        statistics = new Statistics();
         this.rounds = rounds;
 	}
 
 	public void winCheck(List<Player> players) {
-        players.stream().forEach(p -> {
-            p.getHands().stream().forEach(h -> {
+        players.forEach(p -> {
+            p.getHands().forEach(h -> {
                 final Rules.Outcome outcome = rules.hasWon(h.getValue(), dealer.getHand().getValue());
                 if (outcome == WIN) {
                     p.getStatistics().addWin();
-                    statistics.getGame().addWin();
+                    statistics.addWin();
                     dealer.getStatistics().addLoss();
 
                 } else if (outcome == LOSS) {
                     p.getStatistics().addLoss();
-                    statistics.getGame().addLoss();
+                    statistics.addLoss();
                     dealer.getStatistics().addWin();
 
                 } else if (outcome == DRAW) {
                     p.getStatistics().addDraw();
-                    statistics.getGame().addDraw();
+                    statistics.addDraw();
                     dealer.getStatistics().addDraw();
                 }
             });
@@ -64,34 +63,34 @@ public class Game {
 
     private void bustCheck(Player player) {
 		if (!player.getHands().isEmpty() && Checks.isBust(player.getHand().getValue())) {
-			player.removeCurrentHand();
+			player.clearHand();
 			player.getStatistics().addBust();
+			statistics.addBust();
+			statistics.addLoss();
 		}
 	}
 
     private void bustCheck(List<Player> players) {
-        players.stream().forEach(this::bustCheck);
+        players.forEach(this::bustCheck);
     }
 
 	private void clearCards() {
-        players.stream().forEach(player -> player.getHands().clear());
+        players.forEach(player -> player.getHands().clear());
         dealer.getHands().clear();
 	}
 
     private void deal(Deal who) {
         switch (who) {
             case PLAYERS:
-                players.stream().forEach(p -> p.addCard(deckHandler.getCard()));
+                players.forEach(p -> p.addCard(deckHandler.getCard()));
                 break;
             default:
-                players.stream().forEach(p -> p.addCard(deckHandler.getCard()));
+                players.forEach(p -> p.addCard(deckHandler.getCard()));
                 dealer.addCard(deckHandler.getCard());
         }
     }
 
-    void playHand(Player player) {
-        if(player.getHands().isEmpty())
-            return;
+    private void playHand(Player player) {
         boolean isPlaying = true;
         while (isPlaying) {
             final Choice choice = player.getChoice();
@@ -101,13 +100,13 @@ public class Game {
             else if (choice == STAND) {
                 isPlaying = false;
                 if(!player.isDealer())
-                    statistics.getGame().addHand();
+                    statistics.addHand();
             }
         }
     }
 
     private void playHands() {
-        players.stream().forEach(this::playHand);
+        players.forEach(this::playHand);
     }
 
     private void playDealer() {
@@ -117,7 +116,7 @@ public class Game {
     }
 
     private void blackJackCheck(List<Player> players) {
-        players.stream().filter(player -> !player.isDealer()).forEach(player -> {
+        players.forEach(player -> {
             final List<Hand> hands = player.getHands();
             IntStream.range(0, hands.size()).forEach(i -> {
                 if(Checks.isBlackJack(hands.get(i))){
@@ -125,8 +124,8 @@ public class Game {
                         player.clearHand(i);
 //                        player.getStatistics().addBlackJack();
 //                        player.getStatistics().addWin();
-                        statistics.getGame().addBlackJack();
-                        statistics.getGame().addWin();
+                        statistics.addBlackJack();
+                        statistics.addWin();
                     } else {
                         player.getStatistics().addBlackJack();
 //                        statistics.addBlackJack();
@@ -134,6 +133,12 @@ public class Game {
                 }
             });
         });
+
+        if(Checks.isBlackJack(dealer.getHand())){
+            statistics.getDealer().addBlackJack();
+            statistics.addBlackJack();
+        }
+
     }
 
     public void run(Deal deal){
@@ -247,13 +252,15 @@ public class Game {
             clearCards();
             deal(Deal.ALL);
             deal(Deal.ALL);
-            blackJackCheck(players);
-            playHands();
-            playDealer();
-//            bustCheck(players);
+            if(!Checks.isBlackJack(dealer.getHand())){
+                playHands();
+                bustCheck(players);
+                playDealer();
 //            bustCheck(dealer);
+            }
+            blackJackCheck(players);
             winCheck(players);
-            statistics.getGame().addRound();
+            statistics.addRound();
         });
 
         return statistics;

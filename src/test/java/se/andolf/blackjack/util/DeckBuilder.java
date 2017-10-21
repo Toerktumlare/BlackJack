@@ -118,6 +118,19 @@ public class DeckBuilder {
                         new Card(Rank.THREE, Suit.HEARTS),
                         new Card(Rank.FIVE, Suit.DIAMONDS)
                 );
+            case DEALER_BLACKJACK_AFTER_INIT_DEAL:
+                return getDeck(new Card(Rank.SEVEN, Suit.DIAMONDS),
+                        new Card(Rank.QUEEN, Suit.HEARTS),
+                        new Card(Rank.EIGHT, Suit.SPADES),
+                        new Card(Rank.ACE, Suit.DIAMONDS)
+                );
+            case PLAYER_BUSTS:
+                return getDeck(new Card(Rank.SEVEN, Suit.DIAMONDS),
+                        new Card(Rank.THREE, Suit.HEARTS),
+                        new Card(Rank.EIGHT, Suit.SPADES),
+                        new Card(Rank.TEN, Suit.DIAMONDS),
+                        new Card(Rank.TEN, Suit.DIAMONDS)
+                );
             default:
                 return new DeckHandler();
         }

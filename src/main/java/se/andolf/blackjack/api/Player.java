@@ -67,10 +67,6 @@ public class Player {
 		return hands.get(currentHand);
 	}
 
-	public void removeCurrentHand(){
-		hands.remove(currentHand);
-	}
-
     public boolean isDealer() {
         return isDealer;
     }
@@ -82,5 +78,9 @@ public class Player {
     @Override
     public String toString() {
         return "Player: " + name + "\n" + playerStatistic.toString();
+    }
+
+    public void clearHand() {
+        hands.remove(currentHand);
     }
 }

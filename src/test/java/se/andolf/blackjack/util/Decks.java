@@ -10,6 +10,7 @@ public enum Decks {
     FIVE_CARDS;
 
     public enum Scenarios {
+        DEALER_BLACKJACK_AFTER_INIT_DEAL,
         FOUR_PLAYERS_ALL_STAND,
         TWO_PLAYERS_ONE_BLACKJACK,
         ONE_PLAYER_BOTH_DEALER_AND_PLAYER_BUST,
@@ -18,6 +19,7 @@ public enum Decks {
         PLAYER_DRAW,
         TWO_PLAYERS_UNTIL_BOTH_STAND,
         PLAYER_BLACKJACK_DEALER_TEN,
-        PLAYER_BLACKJACK_AFTER_DEAL
+        PLAYER_BLACKJACK_AFTER_DEAL,
+        PLAYER_BUSTS
     }
 }

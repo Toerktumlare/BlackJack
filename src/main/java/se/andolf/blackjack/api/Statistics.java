@@ -3,15 +3,15 @@ package se.andolf.blackjack.api;
 /**
  * @author Thomas on 2017-09-16.
  */
-public class Statistics {
+public class Statistics extends AbstractStatistic{
 
-    private final Results statisticsResults;
+    private PlayerStatistic dealer;
 
-    public Statistics(Results statisticsResults) {
-        this.statisticsResults = statisticsResults;
+    public Statistics() {
+        this.dealer = new PlayerStatistic();
     }
 
-    public Results getGame() {
-        return statisticsResults;
+    public PlayerStatistic getDealer() {
+        return dealer;
     }
 }

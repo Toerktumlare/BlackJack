@@ -1,7 +1,7 @@
 package se.andolf.blackjack;
 
 import org.junit.Test;
-import se.andolf.blackjack.api.Results;
+import se.andolf.blackjack.api.Statistics;
 import se.andolf.blackjack.util.DeckBuilder;
 import se.andolf.blackjack.util.Decks;
 
@@ -15,44 +15,58 @@ public class GameTest {
 
     @Test
     public void shouldPlayASingleRound(){
-        final Results results = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_WINS)).then().getGame();
-        assertEquals(1, results.getRounds());
+        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_WINS)).then();
+        assertEquals(1, statistics.getRounds());
     }
 
     @Test
     public void shouldPlayTwoRounds(){
-        final Results results = play().rounds(2).then().getGame();
+        final Statistics results = play().rounds(2).then();
         assertEquals(2, results.getRounds());
     }
 
     @Test
-    public void shouldPlaySimpleGamePlayerWins(){
-        final Results results = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_WINS)).then().getGame();
-        assertEquals(1, results.getWins());
+    public void playerWins(){
+        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_WINS)).then();
+        assertEquals(1, statistics.getWins());
     }
 
     @Test
-    public void shouldPlaySimpleGamePlayerLooses(){
-        final Results results = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_LOSS)).then().getGame();
-        assertEquals(1, results.getLosses());
+    public void playerLooses(){
+        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_LOSS)).then();
+        assertEquals(1, statistics.getLosses());
     }
 
     @Test
-    public void shouldPlaySimpleGamePlayerDraws(){
-        final Results results = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_DRAW)).then().getGame();
-        assertEquals(1, results.getDraws());
+    public void playerDraws(){
+        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_DRAW)).then();
+        assertEquals(1, statistics.getDraws());
     }
 
     @Test
-    public void shouldPlaySimpleGamePlayerWinsWithBlackjackOnFirstDraw(){
-        final Results results = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BLACKJACK_AFTER_DEAL)).then().getGame();
-        assertEquals(1, results.getWins());
-        assertEquals(1, results.getBlackJacks());
+    public void playerWinsWithBlackjackOnFirstDraw(){
+        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BLACKJACK_AFTER_DEAL)).then();
+        assertEquals(1, statistics.getWins());
+        assertEquals(1, statistics.getBlackJacks());
     }
 
     @Test
     public void shouldPlaySingleGamePlayerWinsWithBlackjackDealerHasTen(){
-        final Results results = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BLACKJACK_DEALER_TEN)).then().getGame();
-        assertEquals(1, results.getWins());
+        final int wins = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BLACKJACK_DEALER_TEN)).then().getWins();
+        assertEquals(1, wins);
+    }
+
+    @Test
+    public void dealerWinsWithBlackJackAfterFirstDeal() {
+        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.DEALER_BLACKJACK_AFTER_INIT_DEAL)).then();
+        assertEquals(1, statistics.getBlackJacks());
+        assertEquals(1, statistics.getDealer().getBlackJacks());
+    }
+
+    @Test
+    public void playerLoosesIfHeIsBust() {
+        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BUSTS)).then();
+        assertEquals(1, statistics.getBusts());
+        assertEquals(1, statistics.getLosses());
     }
 }
