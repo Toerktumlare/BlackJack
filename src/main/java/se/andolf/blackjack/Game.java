@@ -2,10 +2,12 @@ package se.andolf.blackjack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.NameUtil;
 import se.andolf.blackjack.api.*;
 import se.andolf.blackjack.brain.DumbBrain;
 import se.andolf.blackjack.handler.DeckHandler;
 import se.andolf.blackjack.util.Checks;
+import se.andolf.blackjack.util.NamesUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,11 +23,11 @@ public class Game {
 
     private static final Logger logger = LogManager.getLogger(Game.class);
 
-    private static BlackJackSetup blackJackSetup;
+    private static GameBuilder gameBuilder;
     private final int rounds;
     private final List<Player> players;
 	private final Player dealer;
-    private final Statistics statistics;
+    private final Outcome outcome;
     private final DeckHandler deckHandler;
     private final Rules rules;
 
@@ -34,7 +36,7 @@ public class Game {
 		this.deckHandler = deckHandler;
         this.players = players;
         this.rules = rules;
-        statistics = new Statistics();
+        outcome = new Outcome();
         this.rounds = rounds;
 	}
 
@@ -44,17 +46,17 @@ public class Game {
                 final Rules.Outcome outcome = rules.hasWon(h.getValue(), dealer.getHand().getValue());
                 if (outcome == WIN) {
                     p.getStatistics().addWin();
-                    statistics.addWin();
+                    this.outcome.addWin();
                     dealer.getStatistics().addLoss();
 
                 } else if (outcome == LOSS) {
                     p.getStatistics().addLoss();
-                    statistics.addLoss();
+                    this.outcome.addLoss();
                     dealer.getStatistics().addWin();
 
                 } else if (outcome == DRAW) {
                     p.getStatistics().addDraw();
-                    statistics.addDraw();
+                    this.outcome.addDraw();
                     dealer.getStatistics().addDraw();
                 }
             });
@@ -65,8 +67,8 @@ public class Game {
 		if (!player.getHands().isEmpty() && Checks.isBust(player.getHand().getValue())) {
 			player.clearHand();
 			player.getStatistics().addBust();
-			statistics.addBust();
-			statistics.addLoss();
+			outcome.addBust();
+			outcome.addLoss();
 		}
 	}
 
@@ -100,7 +102,7 @@ public class Game {
             else if (choice == STAND) {
                 isPlaying = false;
                 if(!player.isDealer())
-                    statistics.addHand();
+                    outcome.addHand();
             }
         }
     }
@@ -122,21 +124,21 @@ public class Game {
                 if(Checks.isBlackJack(hands.get(i))){
                     if(dealer.getHand().getValue() != 10) {
                         player.clearHand(i);
-//                        player.getStatistics().addBlackJack();
-//                        player.getStatistics().addWin();
-                        statistics.addBlackJack();
-                        statistics.addWin();
+//                        player.getOutcome().addBlackJack();
+//                        player.getOutcome().addWin();
+                        outcome.addBlackJack();
+                        outcome.addWin();
                     } else {
                         player.getStatistics().addBlackJack();
-//                        statistics.addBlackJack();
+//                        outcome.addBlackJack();
                     }
                 }
             });
         });
 
         if(Checks.isBlackJack(dealer.getHand())){
-            statistics.getDealer().addBlackJack();
-            statistics.addBlackJack();
+            outcome.getDealer().addBlackJack();
+            outcome.addBlackJack();
         }
 
     }
@@ -155,7 +157,7 @@ public class Game {
                 run(GameState.DEALER);
                 run(GameState.Checks.BUST);
                 run(GameState.Checks.WIN);
-//                statistics.addRound();
+//                outcome.addRound();
                 break;
             case FIRST_DEAL:
                 deal(Deal.ALL);
@@ -194,60 +196,63 @@ public class Game {
         }
     }
 
-
-    public Statistics getStatistics() {
-        return statistics;
+    public static GameBuilder settings() {
+        gameBuilder = new GameBuilder();
+        return gameBuilder;
     }
 
-    public static BlackJackSetup play() {
-        blackJackSetup = new BlackJackSetup();
-        return blackJackSetup;
+    public static GameBuilder settings(Settings settings) {
+        gameBuilder = new GameBuilder(settings);
+        return gameBuilder;
     }
 
-    public static class BlackJackSetup {
+    public static Outcome play() {
+        gameBuilder = new GameBuilder(new Settings.Builder().build());
+        return gameBuilder.play();
+    }
 
-        private DeckHandler deckHandler;
-        private List<Player> players;
-        private Rules rules;
-        private int rounds = 1;
-        private Game game;
+    public static class GameBuilder {
 
-        public BlackJackSetup(DeckHandler deckHandler, Player... players) {
-            this.deckHandler = deckHandler;
-            this.players = asList(players);
-            this.rules = new StandardRules();
+        private Settings.Builder builder;
+        private  Settings settings;
+
+        public GameBuilder() {
+            builder = new Settings.Builder();
         }
 
-        public BlackJackSetup(Player... players) {
-            this(new DeckHandler(), players);
+        public GameBuilder(Settings settings) {
+            this.settings = settings;
         }
 
-        public BlackJackSetup() {
-            this(new DeckHandler(), new Player("1"));
-        }
-
-        public BlackJackSetup deck(DeckHandler deckHandler) {
-            this.deckHandler =  deckHandler;
+        public GameBuilder deck(DeckHandler deckHandler) {
+            this.builder.setDeckHandler(deckHandler);
             return this;
         }
 
-        public BlackJackSetup rounds(int rounds) {
-            this.rounds = rounds;
+        public GameBuilder deck(Deck deck) {
+            this.builder.setDeckHandler(new DeckHandler(deck));
             return this;
         }
 
-        public Statistics then() {
-            return new Game(players, deckHandler, rules, rounds).start();
+        public GameBuilder rounds(int rounds) {
+            this.builder.setRounds(rounds);
+            return this;
         }
 
-        public Statistics stats() {
-            return game.getStatistics();
+        public GameBuilder players(int value) {
+            final List<Player> players = IntStream.range(0, value).mapToObj(i -> new Player(NamesUtil.getName())).collect(Collectors.toList());
+            this.builder.setPlayers(players);
+            return this;
+        }
+
+        public Outcome play() {
+            if(settings == null)
+                settings = this.builder.build();
+            return new Game(this.settings.getPlayers(), this.settings.getDeckHandler(), this.settings.getRules(), this.settings.getRounds()).start();
         }
     }
 
-    private Statistics start() {
-
-
+    private Outcome start() {
         IntStream.range(0, rounds).forEach(value -> {
             clearCards();
             deal(Deal.ALL);
@@ -260,10 +265,10 @@ public class Game {
             }
             blackJackCheck(players);
             winCheck(players);
-            statistics.addRound();
+            outcome.addRound();
         });
 
-        return statistics;
+        return outcome;
     }
 
 }

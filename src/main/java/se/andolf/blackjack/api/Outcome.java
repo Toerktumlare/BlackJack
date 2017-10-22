@@ -6,14 +6,13 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author Thomas on 2017-09-16.
  */
-public class Statistics extends AbstractStatistic {
+public class Outcome extends AbstractStatistic {
 
-    private static final Logger logger = LogManager.getLogger(Statistics.class);
-
+    private static final Logger logger = LogManager.getLogger(Outcome.class);
 
     private PlayerStatistic dealer;
 
-    public Statistics() {
+    public Outcome() {
         this.dealer = new PlayerStatistic();
     }
 
@@ -23,7 +22,7 @@ public class Statistics extends AbstractStatistic {
 
     @Override
     public String toString() {
-        return "Statistics { " +
+        return "Outcome { " +
                 "wins = " + getWins() +
                 ", losses = " + getLosses() +
                 ", rounds = " + getRounds() + " }";

@@ -1,12 +1,13 @@
 package se.andolf.blackjack;
 
 import org.junit.Test;
-import se.andolf.blackjack.api.Statistics;
+import se.andolf.blackjack.api.Outcome;
+import se.andolf.blackjack.api.Player;
 import se.andolf.blackjack.util.DeckBuilder;
 import se.andolf.blackjack.util.Decks;
 
 import static org.junit.Assert.assertEquals;
-import static se.andolf.blackjack.Game.play;
+import static se.andolf.blackjack.Game.settings;
 
 /**
  * @author Thomas on 2017-04-08.
@@ -15,58 +16,63 @@ public class GameTest {
 
     @Test
     public void shouldPlayASingleRound(){
-        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_WINS)).then();
-        assertEquals(1, statistics.getRounds());
+        final Outcome outcome = settings().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_WINS)).play();
+        assertEquals(1, outcome.getRounds());
     }
 
     @Test
     public void shouldPlayTwoRounds(){
-        final Statistics results = play().rounds(2).then();
+        final Outcome results = settings().rounds(2).play();
         assertEquals(2, results.getRounds());
     }
 
     @Test
     public void playerWins(){
-        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_WINS)).then();
-        assertEquals(1, statistics.getWins());
+        final Outcome outcome = settings().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_WINS)).play();
+        assertEquals(1, outcome.getWins());
     }
 
     @Test
     public void playerLooses(){
-        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_LOSS)).then();
-        assertEquals(1, statistics.getLosses());
+        final Outcome outcome = settings().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_LOSS)).play();
+        assertEquals(1, outcome.getLosses());
     }
 
     @Test
     public void playerDraws(){
-        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_DRAW)).then();
-        assertEquals(1, statistics.getDraws());
+        final Outcome outcome = settings().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_DRAW)).play();
+        assertEquals(1, outcome.getDraws());
     }
 
     @Test
     public void playerWinsWithBlackjackOnFirstDraw(){
-        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BLACKJACK_AFTER_DEAL)).then();
-        assertEquals(1, statistics.getWins());
-        assertEquals(1, statistics.getBlackJacks());
+        final Outcome outcome = settings().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BLACKJACK_AFTER_DEAL)).play();
+        assertEquals(1, outcome.getWins());
+        assertEquals(1, outcome.getBlackJacks());
     }
 
     @Test
     public void shouldPlaySingleGamePlayerWinsWithBlackjackDealerHasTen(){
-        final int wins = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BLACKJACK_DEALER_TEN)).then().getWins();
+        final int wins = settings().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BLACKJACK_DEALER_TEN)).play().getWins();
         assertEquals(1, wins);
     }
 
     @Test
     public void dealerWinsWithBlackJackAfterFirstDeal() {
-        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.DEALER_BLACKJACK_AFTER_INIT_DEAL)).then();
-        assertEquals(1, statistics.getBlackJacks());
-        assertEquals(1, statistics.getDealer().getBlackJacks());
+        final Outcome outcome = settings().deck(DeckBuilder.get(Decks.Scenarios.DEALER_BLACKJACK_AFTER_INIT_DEAL)).play();
+        assertEquals(1, outcome.getBlackJacks());
+        assertEquals(1, outcome.getDealer().getBlackJacks());
     }
 
     @Test
     public void playerLoosesIfHeIsBust() {
-        final Statistics statistics = play().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BUSTS)).then();
-        assertEquals(1, statistics.getBusts());
-        assertEquals(1, statistics.getLosses());
+        final Outcome outcome = settings().deck(DeckBuilder.get(Decks.Scenarios.PLAYER_BUSTS)).play();
+        assertEquals(1, outcome.getBusts());
+        assertEquals(1, outcome.getLosses());
+    }
+
+    @Test
+    public void test() {
+        settings().players(2).play().print();
     }
 }
