@@ -2,6 +2,7 @@ package se.andolf.blackjack.api;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import se.andolf.blackjack.api.statistics.PlayerStatistic;
 import se.andolf.blackjack.brain.Brain;
 import se.andolf.blackjack.brain.DumbBrain;
 

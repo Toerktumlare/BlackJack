@@ -2,8 +2,8 @@ package se.andolf.blackjack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.util.NameUtil;
 import se.andolf.blackjack.api.*;
+import se.andolf.blackjack.api.statistics.Outcome;
 import se.andolf.blackjack.brain.DumbBrain;
 import se.andolf.blackjack.handler.DeckHandler;
 import se.andolf.blackjack.util.Checks;
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static java.util.Arrays.asList;
 import static se.andolf.blackjack.api.Choice.HIT;
 import static se.andolf.blackjack.api.Choice.STAND;
 import static se.andolf.blackjack.api.GameState.FIRST_DEAL;
@@ -46,17 +45,17 @@ public class Game {
                 final Rules.Outcome outcome = rules.hasWon(h.getValue(), dealer.getHand().getValue());
                 if (outcome == WIN) {
                     p.getStatistics().addWin();
-                    this.outcome.addWin();
+                    this.outcome.getGame().addWin();
                     dealer.getStatistics().addLoss();
 
                 } else if (outcome == LOSS) {
                     p.getStatistics().addLoss();
-                    this.outcome.addLoss();
+                    this.outcome.getGame().addLoss();
                     dealer.getStatistics().addWin();
 
                 } else if (outcome == DRAW) {
                     p.getStatistics().addDraw();
-                    this.outcome.addDraw();
+                    this.outcome.getGame().addDraw();
                     dealer.getStatistics().addDraw();
                 }
             });
@@ -67,8 +66,8 @@ public class Game {
 		if (!player.getHands().isEmpty() && Checks.isBust(player.getHand().getValue())) {
 			player.clearHand();
 			player.getStatistics().addBust();
-			outcome.addBust();
-			outcome.addLoss();
+			outcome.getGame().addBust();
+			outcome.getGame().addLoss();
 		}
 	}
 
@@ -102,7 +101,7 @@ public class Game {
             else if (choice == STAND) {
                 isPlaying = false;
                 if(!player.isDealer())
-                    outcome.addHand();
+                    outcome.getGame().addHand();
             }
         }
     }
@@ -126,8 +125,8 @@ public class Game {
                         player.clearHand(i);
 //                        player.getOutcome().addBlackJack();
 //                        player.getOutcome().addWin();
-                        outcome.addBlackJack();
-                        outcome.addWin();
+                        outcome.getGame().addBlackJack();
+                        outcome.getGame().addWin();
                     } else {
                         player.getStatistics().addBlackJack();
 //                        outcome.addBlackJack();
@@ -138,7 +137,7 @@ public class Game {
 
         if(Checks.isBlackJack(dealer.getHand())){
             outcome.getDealer().addBlackJack();
-            outcome.addBlackJack();
+            outcome.getGame().addBlackJack();
         }
 
     }
@@ -265,7 +264,7 @@ public class Game {
             }
             blackJackCheck(players);
             winCheck(players);
-            outcome.addRound();
+            outcome.getGame().addRound();
         });
 
         return outcome;

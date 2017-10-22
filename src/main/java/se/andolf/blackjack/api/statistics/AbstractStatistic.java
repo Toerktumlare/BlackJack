@@ -1,4 +1,4 @@
-package se.andolf.blackjack.api;
+package se.andolf.blackjack.api.statistics;
 
 /**
  * @author Thomas on 2017-04-08.
